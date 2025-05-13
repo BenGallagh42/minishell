@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/05/07 17:25:16 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/05/13 19:35:07 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void	token_redirector_main(const char **input, t_token **head,
 			t_token **current);
 void	token_word(const char **input, t_token **head, t_token **current);
 void	token_wildcard(const char **input, t_token **head, t_token **current);
+int		has_wildcard(const char *input);
 
 // Parser functions
 
