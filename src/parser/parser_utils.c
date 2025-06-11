@@ -6,12 +6,30 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:56:06 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/03 18:04:50 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:18:26 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
+/* Checks if a command is a built-in shell command */
+int	is_builtin(const char *cmd)
+{
+	const char	*builtins[] = {"echo", "cd", "pwd", "export", "unset",
+		"env", "exit", NULL};
+	int			i;
+
+	i = 0;
+	while (builtins[i])
+	{
+		if (ft_strcmp(cmd, builtins[i]) == 0)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+/* Converts a linked list of strings to a null-terminated array */
 char	**list_to_array(t_list *list)
 {
 	size_t	size;
@@ -28,6 +46,8 @@ char	**list_to_array(t_list *list)
 	while (current)
 	{
 		array[i] = ft_strdup(current->content);
+		if (!array[i])
+			return (free_array_partial(array, i), NULL);
 		i++;
 		current = current->next;
 	}
@@ -35,54 +55,48 @@ char	**list_to_array(t_list *list)
 	return (array);
 }
 
+/* Converts a list of redirections to a linked list of structures */
 t_redirection	*list_to_redir_array(t_list *list)
 {
 	t_redirection	*head;
 	t_redirection	*tail;
 	t_list			*current;
-	t_redirection	*redir;
 
 	head = NULL;
 	tail = NULL;
 	current = list;
 	while (current)
 	{
-		redir = (t_redirection *)current->content;
 		if (!head)
-			head = redir;
+			head = current->content;
 		else
-			tail->next = redir;
-		tail = redir;
+			tail->next = current->content;
+		tail = current->content;
 		current = current->next;
 	}
 	return (head);
 }
 
-t_syntax_tree	*build_pipeline_node(t_command **cmds, int cmd_count)
+/* Checks if a token type is a redirection operator */
+int	is_redirection_token(t_token_type type)
 {
-	t_syntax_tree	*node;
-	int				i;
+	if (type == TKN_REDIR_IN || type == TKN_REDIR_OUT
+		|| type == TKN_REDIR_APPEND || type == TKN_REDIR_HEREDOC)
+		return (1);
+	return (0);
+}
 
-	node = malloc(sizeof(t_syntax_tree));
-	if (!node)
+/* Removes quotes from a string if present */
+char	*remove_quotes(const char *str)
+{
+	size_t	len;
+	char	*new_str;
+
+	len = ft_strlen(str);
+	if (len >= 2 && (str[0] == '"' || str[0] == '\'') && str[len - 1] == str[0])
 	{
-		i = 0;
-		while (i < cmd_count)
-			free_command(cmds[i++]);
-		free(cmds);
-		return (NULL);
+		new_str = ft_substr(str, 1, len - 2);
+		return (new_str);
 	}
-	if (cmd_count == 1)
-	{
-		node->e_type = TYPE_COMMAND;
-		node->u_data.command = cmds[0];
-		free(cmds);
-	}
-	else
-	{
-		node->e_type = TYPE_PIPELINE;
-		node->u_data.s_pipeline.commands = cmds;
-		node->u_data.s_pipeline.cmd_count = cmd_count;
-	}
-	return (node);
+	return (ft_strdup(str));
 }

@@ -6,12 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:41:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/05/13 18:42:49 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/05 16:01:53 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+// Scans the input for the closing quote character
 static const char	*scan_for_quote(const char **input, char quote)
 {
 	while (**input && **input != quote)

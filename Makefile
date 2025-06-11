@@ -1,33 +1,32 @@
-# Makefile for Lexer Tester
+# Makefile for Parser Tester
 
 # Variables
 NAME = parser_tester
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -O0
 INC = -Iinc -Ilibft/inc
 LIBFT = libft/libft.a
 
 # Directories
-SRC_DIR = src
-TEST_DIR = tests
+SRC_DIR = src/parser
 OBJ_DIR = obj
 
 # Source Files
-SRC_FILES = $(SRC_DIR)/lexer/lexer_utils.c \
-            $(SRC_DIR)/lexer/lexer.c \
-            $(SRC_DIR)/lexer/token_dollar.c \
-            $(SRC_DIR)/lexer/token_operator.c \
-            $(SRC_DIR)/lexer/token_quotes.c \
-            $(SRC_DIR)/lexer/token_redirector.c \
-			$(SRC_DIR)/lexer/token_wildcard.c \
-            $(SRC_DIR)/lexer/token_word.c \
-			$(SRC_DIR)/parser/parser.c \
-			$(SRC_DIR)/parser/parser_utils.c \
-			$(SRC_DIR)/parser/parser_command.c \
-			$(SRC_DIR)/parser/parser_cleanup.c
+PARSER_SRC =	$(SRC_DIR)/parser.c \
+            	$(SRC_DIR)/parser_command.c \
+            	$(SRC_DIR)/parser_redir.c \
+				$(SRC_DIR)/parser_redir_utils.c \
+            	$(SRC_DIR)/parser_heredoc.c \
+            	$(SRC_DIR)/parser_expand.c \
+            	$(SRC_DIR)/parser_utils.c \
+            	$(SRC_DIR)/parser_utils2.c \
+				$(SRC_DIR)/parser_utils3.c \
+            	$(SRC_DIR)/parser_syntax.c \
+            	$(SRC_DIR)/parser_cleanup.c \
+				$(SRC_DIR)/parser_tester.c
 
 # Object Files
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(PARSER_SRC))
 
 # Rules
 all: $(NAME)

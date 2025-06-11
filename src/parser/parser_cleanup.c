@@ -6,12 +6,45 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 18:02:26 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/03 18:08:03 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/11 18:38:45 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
+/* Frees a command structure */
+void	free_command(t_command *cmd)
+{
+	t_command	*next;
+
+	while (cmd)
+	{
+		next = cmd->next;
+		if (cmd->args)
+			ft_free_array(cmd->args);
+		if (cmd->redirs)
+			free_redirs(cmd->redirs);
+		free(cmd);
+		cmd = next;
+	}
+}
+
+/* Frees an entire linked list of redirections */
+void	free_redirs(t_redirection *redirs)
+{
+	t_redirection	*next;
+
+	while (redirs)
+	{
+		next = redirs->next;
+		free(redirs->target);
+		free(redirs->content);
+		free(redirs);
+		redirs = next;
+	}
+}
+
+/* Frees a single redirection node */
 void	free_redirection(void *content)
 {
 	t_redirection	*redir;
@@ -20,54 +53,29 @@ void	free_redirection(void *content)
 	if (redir)
 	{
 		free(redir->target);
+		free(redir->content);
 		free(redir);
 	}
 }
 
-void	free_command(t_command *cmd)
+/* Frees a command and its lists */
+void	free_cmd(t_command *cmd, t_list *args, t_list *redirs)
 {
-	int				i;
-	t_redirection	*redir;
-	t_redirection	*next;
-
-	if (!cmd)
-		return ;
-	if (cmd->args)
+	if (cmd)
 	{
-		i = 0;
-		while (cmd->args[i])
-			free(cmd->args[i++]);
 		free(cmd->args);
+		free(cmd->redirs);
+		free(cmd);
 	}
-	redir = cmd->redirs;
-	while (redir)
-	{
-		next = redir->next;
-		free_redirection(redir);
-		redir = next;
-	}
-	free(cmd);
+	ft_lstclear(&args, free);
+	ft_lstclear(&redirs, free_redirection);
 }
 
-void	free_syntax_tree(t_syntax_tree *node)
+/* Frees temporary lists */
+void	free_lists(t_list **args, t_list **redirs)
 {
-	int	i;
-
-	if (!node)
-		return ;
-	if (node->e_type == TYPE_COMMAND)
-		free_command(node->u_data.command);
-	else if (node->e_type == TYPE_PIPELINE)
-	{
-		i = 0;
-		while (i < node->u_data.s_pipeline.cmd_count)
-			free_command(node->u_data.s_pipeline.commands[i++]);
-		free(node->u_data.s_pipeline.commands);
-	}
-	else if (node->e_type == TYPE_LOGICAL)
-	{
-		free_syntax_tree(node->u_data.s_logical.left);
-		free_syntax_tree(node->u_data.s_logical.right);
-	}
-	free(node);
+	if (*args)
+		ft_lstclear(args, free);
+	if (*redirs)
+		ft_lstclear(redirs, NULL);
 }

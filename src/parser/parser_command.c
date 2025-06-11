@@ -6,98 +6,101 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/03 18:03:13 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/11 20:32:32 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "minishell.h"
 
-static int	is_redirection_token(t_token *token)
+/* Processes word tokens into argument list */
+static void	process_words(t_token **current, t_list **args,
+				t_program *minishell)
 {
-	if (token->type == TKN_REDIR_IN || token->type == TKN_REDIR_OUT)
-		return (1);
-	if (token->type == TKN_REDIR_APPEND || token->type == TKN_REDIR_HEREDOC)
-		return (1);
-	return (0);
-}
+	char	*expanded;
 
-static t_redirection	*parse_redir(t_token **tokens, t_program *minishell)
-{
-	t_redirection	*redir;
-	t_token			*current;
-
-	redir = malloc(sizeof(t_redirection));
-	if (!redir)
-		return (NULL);
-	current = *tokens;
-	redir->type = current->type;
-	current = current->next;
-	if (!current || current->type != TKN_WORD)
+	while (*current && (*current)->type == TKN_WORD)
 	{
-		if (!current)
-			printf("minishell: syntax error near unexpected token 'newline'\n");
-		else
-			printf("minishell: syntax error near unexpected token '%s'\n",
-				current->value);
-		minishell->error_code = 2;
-		free(redir);
-		return (NULL);
-	}
-	redir->target = ft_strdup(current->value);
-	redir->next = NULL;
-	*tokens = current->next;
-	return (redir);
-}
-
-static void	process_command_tokens(t_token **current, t_list **args_list,
-				t_list **redirs_list, t_program *minishell)
-{
-	t_redirection	*redir;
-
-	while (*current && (*current)->type != TKN_PIPE
-		&& (*current)->type != TKN_AND && (*current)->type != TKN_OR)
-	{
-		if ((*current)->type == TKN_WORD)
-			ft_lstadd_back(args_list, ft_lstnew(ft_strdup((*current)->value)));
-		else if (is_redirection_token(*current))
+		expanded = expand_and_remove_quotes((*current)->value, minishell);
+		if (!expanded)
 		{
-			redir = parse_redir(current, minishell);
-			if (!redir)
-			{
-				ft_lstclear(args_list, free);
-				ft_lstclear(redirs_list, free);
-				return ;
-			}
-			ft_lstadd_back(redirs_list, ft_lstnew(redir));
+			ft_lstclear(args, free);
+			return ;
 		}
-		else
-			break ;
+		ft_lstadd_back(args, ft_lstnew(expanded));
 		*current = (*current)->next;
 	}
 }
 
+/* Processes redirection tokens into redirection list */
+static int	process_redirs(t_token **current, t_list **redirs,
+				t_program *minishell)
+{
+	t_redirection	*redir;
+
+	while (*current && is_redirection_token((*current)->type))
+	{
+		redir = parse_redir(current, minishell);
+		if (!redir)
+		{
+			ft_lstclear(redirs, free_redirection);
+			return (1);
+		}
+		ft_lstadd_back(redirs, ft_lstnew(redir));
+	}
+	return (0);
+}
+
+/* Processes tokens for the command, populating args and redirs lists */
+static int	process_command_tokens(t_token **current, t_list **args,
+								t_list **redirs, t_program *minishell)
+{
+	while (*current && (*current)->type != TKN_PIPE)
+	{
+		process_words(current, args, minishell);
+		if (process_redirs(current, redirs, minishell))
+			return (1);
+	}
+	return (0);
+}
+
+/* Finalizes the command by converting lists to arrays and performing checks */
+static t_command	*finalize_command(t_command *cmd, t_list *args,
+									t_list *redirs)
+{
+	cmd->args = list_to_array(args);
+	if (!cmd->args || cmd->args[0] == NULL)
+	{
+		free_cmd(cmd, args, redirs);
+		return (NULL);
+	}
+	cmd->redirs = list_to_redir_array(redirs);
+	free_lists(&args, &redirs);
+	return (cmd);
+}
+
+/* Parses a simple command from tokens */
 t_command	*parse_simple_cmd(t_token **tokens, t_program *minishell)
 {
 	t_command	*cmd;
-	t_list		*args_list;
-	t_list		*redirs_list;
+	t_list		*args;
+	t_list		*redirs;
 	t_token		*current;
 
+	args = NULL;
+	redirs = NULL;
+	current = *tokens;
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
-	args_list = NULL;
-	redirs_list = NULL;
-	current = *tokens;
 	cmd->args = NULL;
 	cmd->redirs = NULL;
+	cmd->next = NULL;
 	cmd->is_piped = 0;
-	cmd->is_background = 0;
-	process_command_tokens(&current, &args_list, &redirs_list, minishell);
+	if (process_command_tokens(&current, &args, &redirs, minishell))
+	{
+		free_cmd(cmd, args, redirs);
+		return (NULL);
+	}
 	*tokens = current;
-	cmd->args = list_to_array(args_list);
-	cmd->redirs = list_to_redir_array(redirs_list);
-	ft_lstclear(&args_list, free);
-	ft_lstclear(&redirs_list, free);
-	return (cmd);
+	return (finalize_command(cmd, args, redirs));
 }

@@ -6,12 +6,14 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 19:20:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/05/13 20:00:48 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/05 16:00:36 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+// Determines the type of token to process
+// and calls the appropriate tokenization function
 static void	process_token(const char **input, t_token **head, t_token **current)
 {
 	if (**input == '<' || **input == '>')
@@ -26,6 +28,7 @@ static void	process_token(const char **input, t_token **head, t_token **current)
 		token_word(input, head, current);
 }
 
+// Checks if the input consists only of spaces
 static int	is_only_spaces(const char *input)
 {
 	while (*input)
@@ -37,6 +40,8 @@ static int	is_only_spaces(const char *input)
 	return (1);
 }
 
+// Main lexer function that tokenizes the input 
+// and returns the head of the token list
 t_token	*main_lexer(const char *input, t_program *minishell)
 {
 	t_token	*head;

@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:38:25 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/04/23 18:34:14 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/05 16:05:19 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static void	print_error(char redirector, char next_char, int count)
 	}
 }
 
+// Checks for valid redirection syntax
 static int	token_redirector_checker(const char **input)
 {
 	const char	*start;
@@ -58,6 +59,7 @@ static int	token_redirector_checker(const char **input)
 	return (0);
 }
 
+// Tokenizes redirection operators (<, >, <<, >>)
 void	token_redirector(const char **input, t_token **head, t_token **current)
 {
 	const char		*start;
@@ -87,6 +89,7 @@ void	token_redirector(const char **input, t_token **head, t_token **current)
 	add_token(head, current, type, ft_strndup(start, *input - start));
 }
 
+// Main function for handling redirection tokens
 void	token_redirector_main(const char **input, t_token **hd, t_token **curr)
 {
 	const char	*start;
