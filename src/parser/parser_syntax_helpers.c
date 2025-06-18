@@ -1,16 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_syntax_utils.c                              :+:      :+:    :+:   */
+/*   parser_syntax_helpers.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 19:09:24 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/17 19:10:19 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/18 18:33:34 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_word_token(t_token_type type)
+{
+	return (type == TKN_WORD || type == TKN_ENV);
+}
+
+void	print_syntax_error(const char *token_value, t_program *minishell)
+{
+	printf("minishell: syntax error near unexpected token '%s'\n", token_value);
+	minishell->error_code = 2;
+}
 
 static int	handle_redirection(t_token **current, t_program *minishell)
 {

@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:31:38 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/05 18:56:42 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:48:36 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,14 @@ t_command	*main_parser(t_token *tokens, t_program *minishell)
 	cmd = parse_pipeline(&tokens, minishell);
 	if (!cmd)
 		return (NULL);
+	if (tokens && tokens->type == TKN_BG)
+	{
+		cmd->is_background = 1;
+		tokens = tokens->next;
+	}
 	if (tokens)
 	{
-		printf("minishell: syntax error near unexpected token '%s'\n",
-			tokens->value);
+		printf("minishell: syntax error");
 		minishell->error_code = 2;
 		free_command(cmd);
 		return (NULL);

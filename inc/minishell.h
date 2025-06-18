@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/17 19:11:18 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/18 18:40:40 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,19 @@ typedef struct s_program
 	t_command		*cmd_list;
 }					t_program;
 
-// FUNCTIONS
-// Lexer functions
+// MAIN FUNCTIONS
+// Shell functions
+void			init_shell(t_program *minishell, char **envp);
+void			run_shell(t_program *minishell);
+void			free_shell(t_program *minishell);
+
+// Utils functions
+void			free_tokens(t_token *tokens);
+void			print_tokens(t_token *tokens);
+void			print_redirections(t_redirection *redirs);
+void			print_commands(t_command *cmd_list);
+
+// LEXER FUNCTIONS
 t_token			*main_lexer(const char *input, t_program *minishell);
 void			add_token(t_token **head, t_token **curr, t_token_type type,
 					char *val);
@@ -109,11 +120,23 @@ void			token_wildcard(const char **input, t_token **head,
 					t_token **current);
 int				has_wildcard(const char *input);
 
-// Parser functions
+// PARSER FUNCTIONS
+// Syntax Checking
+// Check token syntax and ensure valid command structure
 int				check_syntax(t_token *tokens, t_program *minishell);
+int				process_token(t_token **current, int *has_command,
+					t_program *minishell);
+void			print_syntax_error(const char *token_value,
+					t_program *minishell);
+
+// Parsing Commands
+// Handle main parsing logic for commands and pipelines
 t_command		*main_parser(t_token *tokens, t_program *minishell);
 t_command		*parse_pipeline(t_token **tokens, t_program *minishell);
 t_command		*parse_simple_cmd(t_token **tokens, t_program *minishell);
+
+// Redirection Handling
+// Manage redirections, heredocs, and validation
 t_redirection	*parse_redir(t_token **tokens, t_program *minishell);
 int				handle_heredoc(t_redirection *redir, const char *delim,
 					t_program *minishell);
@@ -123,30 +146,42 @@ void			print_redir_error(t_token *current);
 char			*read_heredoc(const char *delimiter, t_program *minishell,
 					int expand);
 t_redirection	*list_to_redir_array(t_list *list);
-char			**list_to_array(t_list *list);
+
+// Expansion and Variable Handling
+// Expand variables, wildcards, and remove quotes
 void			expand_single_variable(const char **str, char **result,
 					t_program *minishell);
-void			free_command(t_command *cmd);
-void			free_redirection(void *content);
-void			*free_array_partial(char **array, size_t i);
-void			free_redirs(t_redirection *redirs);
-void			free_redirection(void *content);
-void			ft_free_array(char **array);
-void			free_cmd(t_command *cmd, t_list *args, t_list *redirs);
-void			free_lists(t_list **args, t_list **redirs);
 int				process_unquoted(const char **ptr, char **result,
 					t_program *minishell);
 char			*expand_and_remove_quotes(const char *str,
 					t_program *minishell);
-int				is_redirection_token(t_token_type type);
-int				process_token(t_token **current, int *has_command,
-					t_program *minishell);
 char			*remove_quotes(const char *str);
-char			*ft_strjoin_free(char *s1, char *s2);
-int				append_literal(char **result, const char *str, size_t len);
 char			*ft_getenv(const char *name, char **envp);
+t_list			*expand_wildcard(const char *pattern);
+t_list			*get_expanded_list(t_token *token, t_program *minishell);
+void			append_expanded(t_list **args, t_list *to_add);
 
-// Exec functions
+// Utility Functions
+// Support list conversions, string ops, and token checks
+char			**list_to_array(t_list *list);
+int				append_literal(char **result, const char *str, size_t len);
+char			*ft_strjoin_free(char *s1, char *s2);
+int				is_redirection_token(t_token_type type);
+int				is_builtin(const char *cmd);
+void			init_command(t_command *cmd);
+
+// Memory Management
+// Free allocated memory for commands and redirections
+void			free_command(t_command *cmd);
+void			free_redirection(void *content);
+void			*free_array_partial(char **array, size_t i);
+void			free_redirs(t_redirection *redirs);
+void			ft_free_array(char **array);
+void			free_cmd(t_command *cmd, t_list *args, t_list *redirs);
+void			free_lists(t_list **args, t_list **redirs);
+
+
+//EXECUTION FUNCTIONS
 
 // Utility functions
 void			ft_error(const char *error_msg);

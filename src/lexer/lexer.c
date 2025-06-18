@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 19:20:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/05 16:00:36 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/18 18:21:34 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 // Determines the type of token to process
 // and calls the appropriate tokenization function
-static void	process_token(const char **input, t_token **head, t_token **current)
+static void	process_lexer_token(const char **input, t_token **head,
+				t_token **current)
 {
 	if (**input == '<' || **input == '>')
 		token_redirector_main(input, head, current);
@@ -65,7 +66,7 @@ t_token	*main_lexer(const char *input, t_program *minishell)
 		}
 		else
 		{
-			process_token(&input, &head, &current);
+			process_lexer_token(&input, &head, &current);
 		}
 	}
 	return (head);

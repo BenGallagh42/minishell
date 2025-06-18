@@ -26,17 +26,22 @@ LEXER_SRC = $(LEXER_DIR)/lexer.c \
 
 PARSER_SRC = $(PARSER_DIR)/parser.c \
              $(PARSER_DIR)/parser_command.c \
+			 $(PARSER_DIR)/parser_command_helpers.c \
              $(PARSER_DIR)/parser_redir.c \
-             $(PARSER_DIR)/parser_redir_utils.c \
+             $(PARSER_DIR)/parser_redir_helpers.c \
              $(PARSER_DIR)/parser_heredoc.c \
              $(PARSER_DIR)/parser_expand.c \
              $(PARSER_DIR)/parser_utils.c \
              $(PARSER_DIR)/parser_utils2.c \
              $(PARSER_DIR)/parser_utils3.c \
              $(PARSER_DIR)/parser_syntax.c \
+			 $(PARSER_DIR)/parser_syntax_helpers.c \
+			 $(PARSER_DIR)/parser_wildcard.c \
              $(PARSER_DIR)/parser_cleanup.c 
 
-MAIN_SRC = $(MAIN_DIR)/main.c
+MAIN_SRC =	$(MAIN_DIR)/main.c \
+			$(MAIN_DIR)/utils.c \
+			$(MAIN_DIR)/shell.c
 
 # Object Files
 SRC = $(LEXER_SRC) $(PARSER_SRC) $(MAIN_SRC)

@@ -6,28 +6,28 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/17 19:20:00 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:29:25 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Processes word tokens into argument list */
+/* Processes word and wildcard tokens */
 static void	process_words(t_token **current, t_list **args,
-				t_program *minishell)
+	t_program *minishell)
 {
-	char	*expanded;
+	t_list	*expanded_list;
 
 	while (*current && ((*current)->type == TKN_WORD
-			|| (*current)->type == TKN_ENV))
+			|| (*current)->type == TKN_WILDCARD))
 	{
-		expanded = expand_and_remove_quotes((*current)->value, minishell);
-		if (!expanded)
+		expanded_list = get_expanded_list(*current, minishell);
+		if (!expanded_list)
 		{
 			ft_lstclear(args, free);
 			return ;
 		}
-		ft_lstadd_back(args, ft_lstnew(expanded));
+		append_expanded(args, expanded_list);
 		*current = (*current)->next;
 	}
 }
@@ -93,15 +93,15 @@ t_command	*parse_simple_cmd(t_token **tokens, t_program *minishell)
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
-	cmd->args = NULL;
-	cmd->redirs = NULL;
-	cmd->next = NULL;
-	cmd->is_piped = 0;
+	init_command(cmd);
 	if (process_command_tokens(&current, &args, &redirs, minishell))
 	{
 		free_cmd(cmd, args, redirs);
 		return (NULL);
 	}
 	*tokens = current;
-	return (finalize_command(cmd, args, redirs));
+	cmd = finalize_command(cmd, args, redirs);
+	if (cmd && cmd->args && cmd->args[0])
+		cmd->is_builtin = is_builtin(cmd->args[0]);
+	return (cmd);
 }
