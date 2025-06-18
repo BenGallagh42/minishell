@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:44:34 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/11 19:37:53 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:21:40 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	process_redir_type(t_token **tokens, t_redirection *redir)
 static int	check_redir_syntax(t_token **tokens, t_program *minishell,
 				t_redirection *redir)
 {
-	if (!*tokens || (*tokens)->type != TKN_WORD)
+	if (!*tokens || ((*tokens)->type != TKN_WORD && (*tokens)->type != TKN_ENV))
 	{
 		print_redir_error(*tokens);
 		minishell->error_code = 2;

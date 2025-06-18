@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:01:07 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/10 17:35:55 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:56:46 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,20 @@ void	expand_single_variable(const char **str, char **result,
 	var_name = ft_substr(start, 0, *str - start);
 	if (!var_name)
 		return ;
-	var_value = ft_getenv(var_name, minishell->envp);
-	if (var_value)
+	if (ft_strcmp(var_name, "?") == 0)
 	{
-		*result = ft_strjoin_free(*result, var_value);
+		var_value = ft_itoa(minishell->error_code);
+		if (var_value)
+		{
+			*result = ft_strjoin_free(*result, var_value);
+			free(var_value);
+		}
+	}
+	else
+	{
+		var_value = ft_getenv(var_name, minishell->envp);
+		if (var_value)
+			*result = ft_strjoin_free(*result, var_value);
 	}
 	free(var_name);
 }

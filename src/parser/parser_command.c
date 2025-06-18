@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/11 20:32:32 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:20:00 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ static void	process_words(t_token **current, t_list **args,
 {
 	char	*expanded;
 
-	while (*current && (*current)->type == TKN_WORD)
+	while (*current && ((*current)->type == TKN_WORD
+			|| (*current)->type == TKN_ENV))
 	{
 		expanded = expand_and_remove_quotes((*current)->value, minishell);
 		if (!expanded)

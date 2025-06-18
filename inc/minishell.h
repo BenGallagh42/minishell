@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/11 19:37:42 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/17 19:11:18 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,8 @@ int				process_unquoted(const char **ptr, char **result,
 char			*expand_and_remove_quotes(const char *str,
 					t_program *minishell);
 int				is_redirection_token(t_token_type type);
+int				process_token(t_token **current, int *has_command,
+					t_program *minishell);
 char			*remove_quotes(const char *str);
 char			*ft_strjoin_free(char *s1, char *s2);
 int				append_literal(char **result, const char *str, size_t len);
