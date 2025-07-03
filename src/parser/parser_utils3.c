@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:44:26 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/10 17:46:16 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/26 16:02:13 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,16 @@ void	ft_free_array(char **array)
 		i++;
 	}
 	free(array);
+}
+
+// Iterates through tokens and chek their error code 
+int	has_token_errors(t_token *tokens)
+{
+	while (tokens)
+	{
+		if (tokens->error)
+			return (1);
+		tokens = tokens->next;
+	}
+	return (0);
 }

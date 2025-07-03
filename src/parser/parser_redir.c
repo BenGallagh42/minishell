@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:44:34 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/17 19:21:40 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:49:37 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,10 @@ static int	check_redir_syntax(t_token **tokens, t_program *minishell,
 {
 	if (!*tokens || ((*tokens)->type != TKN_WORD && (*tokens)->type != TKN_ENV))
 	{
-		print_redir_error(*tokens);
-		minishell->error_code = 2;
+		if (!*tokens)
+			print_error_message(ERR_SYNTAX_TOKEN, "newline", minishell);
+		else
+			print_error_message(ERR_SYNTAX_TOKEN, (*tokens)->value, minishell);
 		free(redir);
 		return (0);
 	}

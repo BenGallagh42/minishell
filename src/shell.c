@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 18:44:16 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/18 18:00:59 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/03 20:09:15 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	run_shell(t_program *minishell)
 				print_commands(cmd_list);
 				free_command(cmd_list);
 			}
-			printf("Error code: %d\n", minishell->error_code);
 			free_tokens(tokens);
 		}
 		free(input);

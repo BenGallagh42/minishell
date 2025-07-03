@@ -6,12 +6,11 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:25:58 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/18 18:56:44 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/03 18:39:35 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
 
 // int	main(void)
 // {

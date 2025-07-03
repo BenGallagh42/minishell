@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 19:09:24 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/18 18:33:34 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/03 19:46:30 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 
 static int	is_word_token(t_token_type type)
 {
-	return (type == TKN_WORD || type == TKN_ENV);
+	return (type == TKN_WORD || type == TKN_ENV || type == TKN_WILDCARD);
 }
 
 void	print_syntax_error(const char *token_value, t_program *minishell)
 {
-	printf("minishell: syntax error near unexpected token '%s'\n", token_value);
-	minishell->error_code = 2;
+	print_error_message(ERR_SYNTAX_TOKEN, token_value, minishell);
 }
 
 static int	handle_redirection(t_token **current, t_program *minishell)
@@ -49,14 +48,14 @@ int	process_token(t_token **current, int *has_command, t_program *minishell)
 	{
 		if (!*has_command)
 		{
-			print_syntax_error("|", minishell);
+			print_error_message(ERR_SYNTAX_PIPE, NULL, minishell);
 			return (0);
 		}
 		*has_command = 0;
 	}
 	else
 	{
-		print_syntax_error((*current)->value, minishell);
+		print_error_message(ERR_SYNTAX_TOKEN, (*current)->value, minishell);
 		return (0);
 	}
 	*current = (*current)->next;

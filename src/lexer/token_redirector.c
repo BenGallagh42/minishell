@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:38:25 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/05 16:05:19 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/06/20 17:36:57 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,10 +93,21 @@ void	token_redirector(const char **input, t_token **head, t_token **current)
 void	token_redirector_main(const char **input, t_token **hd, t_token **curr)
 {
 	const char	*start;
+	const char	*next;
 
 	start = *input;
 	if (token_redirector_checker(input) == 0)
+	{
 		token_redirector(input, hd, curr);
+		next = *input;
+		while (*next && ft_isspace(*next))
+			next++;
+		if (*next == '<' || *next == '>' || *next == '|' || *next == '&')
+		{
+			printf("minishell: syntax error");
+			(*curr)->error = 1;
+		}
+	}
 	else
 	{
 		while (**input == '<' || **input == '>')

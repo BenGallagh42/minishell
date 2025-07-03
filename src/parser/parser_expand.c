@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:02:13 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/10 17:29:59 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/03 20:04:25 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,16 @@ char	*expand_and_remove_quotes(const char *str, t_program *minishell)
 
 	result = ft_strdup("");
 	if (!result)
+	{
+		print_error_message(ERR_MEMORY, NULL, minishell);
 		return (NULL);
+	}
 	ptr = str;
 	while (*ptr)
 	{
 		if (!process_next_token(&ptr, &result, minishell))
 		{
+			print_error_message(ERR_SYNTAX_TOKEN, "unbalanced quotes", minishell);
 			free(result);
 			return (NULL);
 		}

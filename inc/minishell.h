@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/18 18:40:40 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/03 20:49:35 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,17 @@ typedef struct s_command
 	struct s_command		*next;
 }	t_command;
 
+enum e_error_code
+{
+	ERR_NO_COMMAND = 1,
+	ERR_SYNTAX_TOKEN,
+	ERR_SYNTAX_PIPE,
+	ERR_FILE_NOT_FOUND,
+	ERR_PERMISSION_DENIED,
+	ERR_MEMORY,
+	ERR_INTERRUPTED
+};
+
 // MINISHELL: Main program struct
 typedef struct s_program
 {
@@ -122,12 +133,13 @@ int				has_wildcard(const char *input);
 
 // PARSER FUNCTIONS
 // Syntax Checking
-// Check token syntax and ensure valid command structure
+// Check token syntax and validity
 int				check_syntax(t_token *tokens, t_program *minishell);
 int				process_token(t_token **current, int *has_command,
 					t_program *minishell);
 void			print_syntax_error(const char *token_value,
 					t_program *minishell);
+int				has_token_errors(t_token *tokens);
 
 // Parsing Commands
 // Handle main parsing logic for commands and pipelines
@@ -142,7 +154,6 @@ int				handle_heredoc(t_redirection *redir, const char *delim,
 					t_program *minishell);
 int				validate_redir_target(t_redirection *redir,
 					t_program *minishell);
-void			print_redir_error(t_token *current);
 char			*read_heredoc(const char *delimiter, t_program *minishell,
 					int expand);
 t_redirection	*list_to_redir_array(t_list *list);
@@ -157,7 +168,7 @@ char			*expand_and_remove_quotes(const char *str,
 					t_program *minishell);
 char			*remove_quotes(const char *str);
 char			*ft_getenv(const char *name, char **envp);
-t_list			*expand_wildcard(const char *pattern);
+t_list			*expand_wildcard(const char *pattern, t_program *minishell);
 t_list			*get_expanded_list(t_token *token, t_program *minishell);
 void			append_expanded(t_list **args, t_list *to_add);
 
@@ -169,6 +180,10 @@ char			*ft_strjoin_free(char *s1, char *s2);
 int				is_redirection_token(t_token_type type);
 int				is_builtin(const char *cmd);
 void			init_command(t_command *cmd);
+void			print_error_message(int error_code, const char *token_value,
+					t_program *minishell);
+int				validate_file_arg(const char *arg, t_program *minishell);
+int				needs_file_validation(const char *cmd);
 
 // Memory Management
 // Free allocated memory for commands and redirections
@@ -179,7 +194,6 @@ void			free_redirs(t_redirection *redirs);
 void			ft_free_array(char **array);
 void			free_cmd(t_command *cmd, t_list *args, t_list *redirs);
 void			free_lists(t_list **args, t_list **redirs);
-
 
 //EXECUTION FUNCTIONS
 

@@ -37,6 +37,7 @@ PARSER_SRC = $(PARSER_DIR)/parser.c \
              $(PARSER_DIR)/parser_syntax.c \
 			 $(PARSER_DIR)/parser_syntax_helpers.c \
 			 $(PARSER_DIR)/parser_wildcard.c \
+			 $(PARSER_DIR)/parser_errors_handling.c \
              $(PARSER_DIR)/parser_cleanup.c 
 
 MAIN_SRC =	$(MAIN_DIR)/main.c \
