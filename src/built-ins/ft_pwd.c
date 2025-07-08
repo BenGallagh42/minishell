@@ -1,25 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 18:25:58 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/08 19:39:24 by bboulmie         ###   ########.fr       */
+/*   Created: 2025/07/08 18:32:01 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/08 18:58:06 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	ft_pwd(t_program *minishell)
 {
-	t_program	minishell;
+	char	*cwd;
 
-	(void)argc;
-	(void)argv;
-	init_shell(&minishell, envp);
-	run_shell(&minishell);
-	free_shell(&minishell);
-	return (minishell.error_code);
+	cwd = getcwd(NULL, 0);
+	if (cwd == NULL)
+	{
+		ft_putstr_fd("pwd: error getting current directory\n", STDERR_FILENO);
+		return (1);
+	}
+	ft_putstr_fd(cwd, STDOUT_FILENO);
+	ft_putstr_fd("\n", STDOUT_FILENO);
+	free(cwd);
+	return (0);
 }

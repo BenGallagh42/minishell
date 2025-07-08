@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 18:44:16 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/03 20:09:15 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/08 18:26:51 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void	run_shell(t_program *minishell)
 		input = readline("minishell> ");
 		if (!input)
 			break ;
+		if (input && *input)
+			add_history(input);
 		tokens = main_lexer(input, minishell);
 		if (tokens)
 		{
