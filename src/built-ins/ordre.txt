@@ -1,0 +1,7 @@
+pwd
+echo
+env
+cd
+export
+unset
+exit
