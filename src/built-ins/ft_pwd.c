@@ -6,13 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:32:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/08 18:58:06 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/09 20:38:51 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(t_program *minishell)
+int	ft_pwd(void)
 {
 	char	*cwd;
 

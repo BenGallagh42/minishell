@@ -11,6 +11,8 @@ DEPFLAGS = -MMD -MP
 # Directories
 LEXER_DIR = src/lexer
 PARSER_DIR = src/parser
+EXEC_DIR = src/exec
+BUILTINS_DIR = src/built-ins
 MAIN_DIR = src
 OBJ_DIR = obj
 
@@ -38,19 +40,27 @@ PARSER_SRC = $(PARSER_DIR)/parser.c \
 			 $(PARSER_DIR)/parser_syntax_helpers.c \
 			 $(PARSER_DIR)/parser_wildcard.c \
 			 $(PARSER_DIR)/parser_errors_handling.c \
-             $(PARSER_DIR)/parser_cleanup.c 
+             $(PARSER_DIR)/parser_cleanup.c
+
+EXEC_SRC =	$(EXEC_DIR)/exec_main.c \
+			$(EXEC_DIR)/exec_builtin.c \
+			$(EXEC_DIR)/exec_redirection.c \
+			$(EXEC_DIR)/exec_utils.c
+
+BUILTINS_SRC =	$(BUILTINS_DIR)/ft_echo.c \
+				$(BUILTINS_DIR)/ft_pwd.c
 
 MAIN_SRC =	$(MAIN_DIR)/main.c \
 			$(MAIN_DIR)/utils.c \
 			$(MAIN_DIR)/shell.c
 
 # Object Files
-SRC = $(LEXER_SRC) $(PARSER_SRC) $(MAIN_SRC)
+SRC = $(LEXER_SRC) $(PARSER_SRC) $(EXEC_SRC) $(BUILTINS_SRC) $(MAIN_SRC)
 OBJ_FILES = $(patsubst %.c,$(OBJ_DIR)/%.o,$(notdir $(SRC)))
 DEPS = $(OBJ_FILES:.o=.d)
 
 # VPATH
-VPATH = $(LEXER_DIR):$(PARSER_DIR):$(MAIN_DIR)
+VPATH = $(LEXER_DIR):$(PARSER_DIR):$(EXEC_DIR):$(BUILTINS_DIR):$(MAIN_DIR)
 
 # Colors
 GREEN = \033[1;32m

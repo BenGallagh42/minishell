@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/03 20:49:35 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/09 20:38:48 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,21 @@ void			free_cmd(t_command *cmd, t_list *args, t_list *redirs);
 void			free_lists(t_list **args, t_list **redirs);
 
 //EXECUTION FUNCTIONS
+// Handle main executioner logic
+void			execute_commands(t_command *cmd, t_program *minishell);
 
-// Utility functions
-void			ft_error(const char *error_msg);
+// Handle builtins
+void			execute_builtin(t_command *cmd, t_program *minishell);
+
+// Built-ins
+int				ft_echo(t_command *command);
+int				ft_pwd(void);
+
+// Handle redirections
+void			handle_redirections(t_redirection *redirs,
+					t_program *minishell);
+
+// Utils
+char			*find_command_path(char *cmd, t_program *minishell);
+
 #endif
