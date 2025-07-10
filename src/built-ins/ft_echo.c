@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:09:45 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/09 20:30:21 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/10 15:23:16 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ static void	echo_print(char **args, int start, int suppress_newline)
 
 int	ft_echo(t_command *command)
 {
-	int	i;
 	int	suppress_newline;
+	int	i;
 
 	i = 1;
 	suppress_newline = 0;

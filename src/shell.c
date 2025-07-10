@@ -6,15 +6,33 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 18:44:16 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/09 14:11:25 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/10 19:14:58 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/minishell.h"
+#include "minishell.h"
 
 void	init_shell(t_program *minishell, char **envp)
 {
-	minishell->envp = envp;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (envp[i])
+		i++;
+	minishell->envp = malloc(sizeof(char *) * (i + 1));
+	if (!minishell->envp)
+	{
+		ft_putstr_fd("minishell: memory allocation failed\n", STDERR_FILENO);
+		exit(1);
+	}
+	while (j < i)
+	{
+		minishell->envp[j] = ft_strdup(envp[j]);
+		j++;
+	}
+	minishell->envp[i] = NULL;
 	minishell->error_code = 0;
 }
 
@@ -48,5 +66,13 @@ void	run_shell(t_program *minishell)
 
 void	free_shell(t_program *minishell)
 {
-	(void)minishell;
+	int	i;
+
+	i = 0;
+	while (minishell->envp[i])
+	{
+		free(minishell->envp[i]);
+		i++;
+	}
+	free(minishell->envp);
 }

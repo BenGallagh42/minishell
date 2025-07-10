@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/09 20:38:48 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/10 18:56:31 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,12 @@ void			execute_builtin(t_command *cmd, t_program *minishell);
 // Built-ins
 int				ft_echo(t_command *command);
 int				ft_pwd(void);
+int				ft_env(t_command *cmd, t_program *minishell);
+int				ft_cd(t_command *cmd, t_program *minishell);
+
+// Built-ins utils
+int				ft_setenv(const char *name, const char *value,
+					t_program *minishell);
 
 // Handle redirections
 void			handle_redirections(t_redirection *redirs,
