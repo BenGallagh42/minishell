@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:01:07 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/18 15:03:41 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/11 15:39:30 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,25 @@ void	*free_array_partial(char **array, size_t i)
 
 // Expands a variable from the input string
 void	expand_single_variable(const char **str, char **result,
-	t_program *minishell)
+t_program *minishell)
 {
 	const char	*start;
 	char		*var_name;
 	char		*var_value;
 
 	(*str)++;
-	start = *str;
-	while (ft_isalnum(**str) || **str == '_')
+	if (**str == '?')
+	{
+		var_name = ft_strdup("?");
 		(*str)++;
-	var_name = ft_substr(start, 0, *str - start);
+	}
+	else
+	{
+		start = *str;
+		while (ft_isalnum(**str) || **str == '_')
+			(*str)++;
+		var_name = ft_substr(start, 0, *str - start);
+	}
 	if (!var_name)
 		return ;
 	if (ft_strcmp(var_name, "?") == 0)
