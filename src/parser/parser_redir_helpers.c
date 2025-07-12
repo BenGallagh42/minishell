@@ -20,7 +20,9 @@ int	handle_heredoc(t_redirection *redir, const char *delim,
 	char	*content;
 
 	expand = !(delim[0] == '\'' || delim[0] == '"');
-	redir->target = remove_quotes(delim);
+	char *expanded = expand_and_remove_quotes(delim, minishell);
+	redir->target = expanded ? ft_strdup(expanded) : NULL;
+	free(expanded);
 	if (!redir->target)
 		return (0);
 	content = read_heredoc(redir->target, minishell, expand);
