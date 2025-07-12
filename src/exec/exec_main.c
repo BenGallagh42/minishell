@@ -12,113 +12,113 @@
 
 #include "minishell.h"
 
-void execute_commands(t_command *cmd, t_program *minishell)
+// Executes all parsed commands, handling piping, redirections, and builtins
+void	execute_commands(t_command *cmd, t_program *minishell)
 {
-    int prev_pipe = -1; // File descriptor for the previous pipe's read end
-    int pipefd[2];      // Current pipe file descriptors
-    pid_t pid;          // Process ID for forking
-    int status;         // Exit status of child processes
-    char *cmd_path;
-    pid_t *pids = NULL; // Array to store child PIDs
-    int cmd_count = 0;  // Number of commands
-    int i;
+	int		prev_pipe = -1;       // File descriptor for the previous pipe's read end
+	int		pipefd[2];            // Current pipe file descriptors
+	pid_t	*pids;                // Array to store child PIDs
+	int		i = 0;
+	int		cmd_count = 0;
+	int		status;
 
-    // Count commands to allocate PID array
-    t_command *temp = cmd;
-    while (temp)
-    {
-        cmd_count++;
-        temp = temp->next;
-    }
-    pids = malloc(sizeof(pid_t) * cmd_count);
-    if (!pids)
-    {
-        printf("Memory allocation failed\n");
-        return;
-    }
-    i = 0;
+	// Count commands to allocate PID array
+	t_command *temp = cmd;
+	while (temp)
+	{
+		cmd_count++;
+		temp = temp->next;
+	}
 
-    // Execute all commands
-    while (cmd)
-    {
-        if (cmd->is_builtin)
-        {
-            execute_builtin(cmd, minishell);
-        }
-        else
-        {
-            if (cmd->is_piped)
-            {
-                if (pipe(pipefd) == -1)
-                {
-                    printf("Pipe failed\n");
-                    free(pids);
-                    return;
-                }
-            }
+	pids = malloc(sizeof(pid_t) * cmd_count);
+	if (!pids)
+	{
+		print_error_message(ERR_MEMORY, NULL, minishell);
+		return;
+	}
 
-            pid = fork();
-            if (pid == -1)
-            {
-                printf("Fork failed\n");
-                free(pids);
-                return;
-            }
+	// Execute all commands
+	while (cmd)
+	{
+		// If it's a single builtin, execute in parent to preserve environment
+		if (cmd->is_builtin && cmd_count == 1)
+		{
+			handle_redirections(cmd->redirs, minishell); // Apply redirections in parent
+			execute_builtin(cmd, minishell);
+			break;
+		}
 
-            if (pid == 0) // Child process
-            {
-                if (prev_pipe != -1)
-                {
-                    dup2(prev_pipe, STDIN_FILENO);
-                    close(prev_pipe);
-                }
-                if (cmd->is_piped)
-                {
-                    dup2(pipefd[1], STDOUT_FILENO);
-                    close(pipefd[0]);
-                    close(pipefd[1]);
-                }
-                handle_redirections(cmd->redirs, minishell);
-                cmd_path = find_command_path(cmd->args[0], minishell);
-                if (!cmd_path)
-                {
-                    print_error_message(ERR_NO_COMMAND, cmd->args[0], minishell);
-                    exit(127);
-                }
-                execve(cmd_path, cmd->args, minishell->envp);
-                print_error_message(ERR_PERMISSION_DENIED, cmd->args[0], minishell);
-                free(cmd_path);
-                exit(126);
-            }
-            else // Parent process
-            {
-                pids[i++] = pid; // Store PID
-                if (prev_pipe != -1)
-                    close(prev_pipe);
-                if (cmd->is_piped)
-                {
-                    close(pipefd[1]);
-                    prev_pipe = pipefd[0];
-                }
-                else
-                {
-                    prev_pipe = -1;
-                }
-            }
-        }
-        cmd = cmd->next;
-    }
+		// Create a pipe if needed
+		if (cmd->is_piped && pipe(pipefd) == -1)
+		{
+			print_error_message(ERR_PIPE, NULL, minishell);
+			free(pids);
+			return;
+		}
 
-    // Close last pipe read end if it exists
-    if (prev_pipe != -1)
-        close(prev_pipe);
+		// Fork a new process
+		pids[i] = fork();
+		if (pids[i] == -1)
+		{
+			print_error_message(ERR_FORK, NULL, minishell);
+			free(pids);
+			return;
+		}
 
-    // Wait for all child processes
-    for (int j = 0; j < i; j++)
-    {
-        waitpid(pids[j], &status, 0);
-        if (WIFEXITED(status))
-            minishell->error_code = WEXITSTATUS(status);
-    }
-    free(pids);
+		// Child process
+		if (pids[i] == 0)
+		{
+			if (prev_pipe != -1)
+			{
+				dup2(prev_pipe, STDIN_FILENO);
+				close(prev_pipe);
+			}
+			if (cmd->is_piped)
+			{
+				close(pipefd[0]);
+				dup2(pipefd[1], STDOUT_FILENO);
+				close(pipefd[1]);
+			}
+
+			handle_redirections(cmd->redirs, minishell);
+
+			char *cmd_path = find_command_path(cmd->args[0], minishell);
+			if (!cmd_path)
+			{
+				print_error_message(ERR_NO_COMMAND, cmd->args[0], minishell);
+				exit(127);
+			}
+			execve(cmd_path, cmd->args, minishell->envp);
+			print_error_message(ERR_PERMISSION_DENIED, cmd->args[0], minishell);
+			free(cmd_path);
+			exit(126);
+		}
+
+		// Parent process: close pipe ends and move to next command
+		if (prev_pipe != -1)
+			close(prev_pipe);
+		if (cmd->is_piped)
+		{
+			close(pipefd[1]);
+			prev_pipe = pipefd[0];
+		}
+		else
+			prev_pipe = -1;
+
+		cmd = cmd->next;
+		i++;
+	}
+
+	// Close last pipe read end if it exists
+	if (prev_pipe != -1)
+		close(prev_pipe);
+
+	// Wait for all child processes and capture their exit status
+	for (int j = 0; j < i; j++)
+	{
+		waitpid(pids[j], &status, 0);
+		if (WIFEXITED(status))
+			minishell->error_code = WEXITSTATUS(status);
+	}
+	free(pids);
 }
