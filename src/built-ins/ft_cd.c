@@ -29,7 +29,8 @@ int	ft_cd(t_command *cmd, t_program *minishell)
 		ft_putstr_fd("cd: error getting current directory\n", STDERR_FILENO);
 		return (1);
 	}
-	if (cmd->args[1] == NULL)
+	// fixed cd --
+	if (cmd->args[1] == NULL || ft_strcmp(cmd->args[1], "--") == 0)
 	{
 		target = ft_getenv("HOME", minishell->envp);
 		if (target == NULL)
@@ -40,9 +41,7 @@ int	ft_cd(t_command *cmd, t_program *minishell)
 		}
 	}
 	else
-	{
 		target = cmd->args[1];
-	}
 	if (chdir(target) == -1)
 	{
 		ft_putstr_fd("cd: ", STDERR_FILENO);
