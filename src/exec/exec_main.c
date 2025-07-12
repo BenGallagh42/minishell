@@ -79,9 +79,12 @@ void	execute_commands(t_command *cmd, t_program *minishell)
 				dup2(pipefd[1], STDOUT_FILENO);
 				close(pipefd[1]);
 			}
-
 			handle_redirections(cmd->redirs, minishell);
-
+			if (!cmd->args || !cmd->args[0] || ft_strlen(cmd->args[0]) == 0)
+			{
+				ft_putstr_fd("minishell: : command not found\n", STDERR_FILENO);
+				exit(127); // Standard exit code for "command not found"
+			}
 			char *cmd_path = find_command_path(cmd->args[0], minishell);
 			if (!cmd_path)
 			{
