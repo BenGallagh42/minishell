@@ -51,7 +51,8 @@ BUILTINS_SRC =	$(BUILTINS_DIR)/ft_echo.c \
 				$(BUILTINS_DIR)/ft_pwd.c \
 				$(BUILTINS_DIR)/ft_env.c \
 				$(BUILTINS_DIR)/ft_cd.c \
-				$(BUILTINS_DIR)/ft_cd_utils.c
+				$(BUILTINS_DIR)/ft_cd_utils.c \
+				$(BUILTINS_DIR)/ft_exit.c
 
 MAIN_SRC =	$(MAIN_DIR)/main.c \
 			$(MAIN_DIR)/utils.c \

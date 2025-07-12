@@ -209,6 +209,7 @@ int				ft_echo(t_command *command);
 int				ft_pwd(void);
 int				ft_env(t_command *cmd, t_program *minishell);
 int				ft_cd(t_command *cmd, t_program *minishell);
+int				ft_exit(t_command *cmd, t_program *minishell);
 
 // Built-ins utils
 int				ft_setenv(const char *name, const char *value,

@@ -26,6 +26,6 @@ void	execute_builtin(t_command *cmd, t_program *minishell)
 	// 	minishell->error_code = ft_unset(cmd->args, minishell);
 	else if (ft_strcmp(cmd->args[0], "env") == 0)
 		minishell->error_code = ft_env(cmd, minishell);
-	// else if (ft_strcmp(cmd->args[0], "exit") == 0)
-	// 	ft_exit(cmd->args, minishell);
+	else if (ft_strcmp(cmd->args[0], "exit") == 0)
+	 	minishell->error_code = ft_exit(cmd, minishell);
 }
