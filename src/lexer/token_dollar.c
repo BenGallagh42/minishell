@@ -39,9 +39,8 @@ static void	handle_dollar_question(const char **input,
 static void	handle_invalid_var(const char **input,
 	t_token **head, t_token **curr)
 {
-	printf("minishell: syntax error: invalid variable name\n");
+	// Just treat $ as a literal token
 	add_token(head, curr, TKN_WORD, ft_strdup("$"));
-	(*curr)->error = 1;
 	if (**input)
 		(*input)++;
 }
