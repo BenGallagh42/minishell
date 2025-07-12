@@ -18,27 +18,37 @@ int	ft_cd(t_command *cmd, t_program *minishell)
 	char	*old_pwd;
 	char	*new_pwd;
 
-	if (cmd->args[1] != NULL && cmd->args[2] != NULL)
+	if (cmd->args[1] && cmd->args[2])
 	{
 		ft_putstr_fd("cd: too many arguments\n", STDERR_FILENO);
 		return (1);
 	}
 	old_pwd = getcwd(NULL, 0);
-	if (old_pwd == NULL)
+	if (!old_pwd)
 	{
 		ft_putstr_fd("cd: error getting current directory\n", STDERR_FILENO);
 		return (1);
 	}
-	// fixed cd --
-	if (cmd->args[1] == NULL || ft_strcmp(cmd->args[1], "--") == 0)
+	if (!cmd->args[1] || ft_strcmp(cmd->args[1], "--") == 0)
 	{
 		target = ft_getenv("HOME", minishell->envp);
-		if (target == NULL)
+		if (!target)
 		{
 			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
 			free(old_pwd);
 			return (1);
 		}
+	}
+	else if (ft_strcmp(cmd->args[1], "-") == 0)
+	{
+		target = ft_getenv("OLDPWD", minishell->envp);
+		if (!target)
+		{
+			ft_putstr_fd("cd: OLDPWD not set\n", STDERR_FILENO);
+			free(old_pwd);
+			return (1);
+		}
+		ft_putendl_fd(target, STDOUT_FILENO);
 	}
 	else
 		target = cmd->args[1];
@@ -53,7 +63,7 @@ int	ft_cd(t_command *cmd, t_program *minishell)
 		return (1);
 	}
 	new_pwd = getcwd(NULL, 0);
-	if (new_pwd == NULL)
+	if (!new_pwd)
 	{
 		ft_putstr_fd("cd: error getting new current directory\n", STDERR_FILENO);
 		free(old_pwd);
