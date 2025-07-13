@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:44:34 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/03 19:49:37 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/11 18:01:40 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	expand_and_validate_target(t_token **tokens, t_redirection *redir,
 	else
 	{
 		redir->target = expand_and_remove_quotes(current->value, minishell);
-		if (!redir->target || !validate_redir_target(redir, minishell))
+		if (!redir->target)
 		{
 			free(redir->target);
 			free(redir);
