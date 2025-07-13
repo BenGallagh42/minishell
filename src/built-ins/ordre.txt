@@ -1,5 +1,2 @@
-env
-cd
-export
 unset
 exit

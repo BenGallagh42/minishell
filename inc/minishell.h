@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/10 18:56:31 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/11 22:52:16 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,15 +202,28 @@ void			execute_commands(t_command *cmd, t_program *minishell);
 // Handle builtins
 void			execute_builtin(t_command *cmd, t_program *minishell);
 
-// Built-ins
+// BUILT_IN FUNCTIONS
+// ft_export
+int				ft_export(t_command *cmd, t_program *minishell);
+int				is_valid_identifier(const char *key);
+char			**sort_env(char **envp);
+void			print_sorted_env(char **sorted);
+
 int				ft_echo(t_command *command);
 int				ft_pwd(void);
 int				ft_env(t_command *cmd, t_program *minishell);
 int				ft_cd(t_command *cmd, t_program *minishell);
 
-// Built-ins utils
+// ft_setenv
 int				ft_setenv(const char *name, const char *value,
 					t_program *minishell);
+int				find_env_index(const char *name, char **envp);
+char			*create_new_var(const char *name, const char *value);
+char			**alloc_new_envp(int n);
+void			copy_and_add_to_envp(char **new_envp, char **old_envp,
+					char *new_var, int n);
+
+
 
 // Handle redirections
 void			handle_redirections(t_redirection *redirs,

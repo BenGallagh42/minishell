@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 19:47:42 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/10 18:15:44 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/11 21:17:53 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	execute_builtin(t_command *cmd, t_program *minishell)
 		minishell->error_code = ft_cd(cmd, minishell);
 	else if (ft_strcmp(cmd->args[0], "pwd") == 0)
 		minishell->error_code = ft_pwd();
-	// else if (ft_strcmp(cmd->args[0], "export") == 0)
-	// 	minishell->error_code = ft_export(cmd->args, minishell);
+	else if (ft_strcmp(cmd->args[0], "export") == 0)
+		minishell->error_code = ft_export(cmd, minishell);
 	// else if (ft_strcmp(cmd->args[0], "unset") == 0)
 	// 	minishell->error_code = ft_unset(cmd->args, minishell);
 	else if (ft_strcmp(cmd->args[0], "env") == 0)
