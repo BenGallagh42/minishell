@@ -86,10 +86,21 @@ void	execute_commands(t_command *cmd, t_program *minishell)
 				exit(127); // Standard exit code for "command not found"
 			}
 			char *cmd_path = find_command_path(cmd->args[0], minishell);
+			// /ls error handling fix
 			if (!cmd_path)
 			{
-				print_error_message(ERR_NO_COMMAND, cmd->args[0], minishell);
-				exit(127);
+				if (ft_strchr(cmd->args[0], '/'))
+				{
+					ft_putstr_fd("minishell: ", STDERR_FILENO);
+					ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+					ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+					exit(127);
+				}
+				else
+				{
+					print_error_message(ERR_NO_COMMAND, cmd->args[0], minishell);
+					exit(127);
+				}
 			}
 			execve(cmd_path, cmd->args, minishell->envp);
 			print_error_message(ERR_PERMISSION_DENIED, cmd->args[0], minishell);
