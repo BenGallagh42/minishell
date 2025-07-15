@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 18:14:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/11 22:42:01 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/14 21:25:10 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,25 @@ static int	handle_invalid_identifier(const char *arg, char *key, char *value)
 	return (1);
 }
 
+static char	*remove_value_quotes(char *value)
+{
+	char	*new_value;
+	size_t	len;
+
+	new_value = NULL;
+	if (!value)
+		return (NULL);
+	len = ft_strlen(value);
+	if (len >= 2 && ((value[0] == '"' && value[len - 1] == '"')
+			|| (value[0] == '\'' && value[len - 1] == '\'')))
+	{
+		new_value = ft_strndup(value + 1, len - 2);
+		free(value);
+		return (new_value);
+	}
+	return (value);
+}
+
 static int	process_export_arg(const char *arg, t_program *minishell)
 {
 	char	*key;
@@ -55,17 +74,12 @@ static int	process_export_arg(const char *arg, t_program *minishell)
 	key = NULL;
 	value = NULL;
 	if (get_key_value(arg, &key, &value))
-	{
-		free(key);
-		free(value);
 		return (1);
-	}
 	if (!is_valid_identifier(key))
 		return (handle_invalid_identifier(arg, key, value));
-	if (ft_setenv(key, value, minishell) != 0)
-		ret = 1;
-	else
-		ret = 0;
+	if (value)
+		value = remove_value_quotes(value);
+	ret = ft_setenv(key, value, minishell);
 	free(key);
 	free(value);
 	return (ret);

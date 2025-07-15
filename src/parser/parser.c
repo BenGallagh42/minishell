@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:31:38 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/03 19:42:17 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/14 22:02:36 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ t_command	*parse_pipeline(t_token **tokens, t_program *minishell)
 		current->is_piped = 1;
 		current->next = parse_simple_cmd(tokens, minishell);
 		if (!current->next)
-			return (free_command(head), NULL);
+		{
+			free_command(head);
+			return (NULL);
+		}
 		current = current->next;
 	}
 	return (head);

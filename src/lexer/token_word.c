@@ -6,37 +6,55 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 16:47:14 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/05 15:58:57 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/14 21:28:00 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-// Checks if a character is a special character 
+// Checks if a character is a special character
 static int	is_special(char c)
 {
 	return (c == '<' || c == '>' || c == '|' || c == '&'
 		|| c == '\'' || c == '"');
 }
 
-// Tokenizes a word from the input, handling 
-// assignment variables if '=' is present
+// Handles the value part after '=' in a word token
+static void	handle_value_part(const char **input, char quote)
+{
+	if (**input == '"' || **input == '\'')
+	{
+		quote = **input;
+		(*input)++;
+		while (**input && **input != quote)
+			(*input)++;
+		if (**input == quote)
+			(*input)++;
+	}
+	else
+	{
+		while (**input && !ft_isspace(**input) && !is_special(**input))
+			(*input)++;
+	}
+}
+
+// Tokenizes a word from the input
 void	token_word(const char **input, t_token **head, t_token **current)
 {
 	const char	*start;
-	const char	*equal_position;
+	char		quote;
 
 	start = *input;
-	equal_position = NULL;
+	quote = '\0';
 	while (**input && !ft_isspace(**input) && !is_special(**input))
 	{
-		if (**input == '=' && equal_position == NULL)
-			equal_position = *input;
+		if (**input == '=')
+		{
+			(*input)++;
+			handle_value_part(input, quote);
+			break ;
+		}
 		(*input)++;
 	}
-	if (equal_position && equal_position > start && *input > equal_position + 1)
-		add_token(head, current, TKN_ASSIGN_VAR,
-			ft_strndup(start, *input - start));
-	else
-		add_token(head, current, TKN_WORD, ft_strndup(start, *input - start));
+	add_token(head, current, TKN_WORD, ft_strndup(start, *input - start));
 }

@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:41:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/05 16:01:53 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/15 13:47:20 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ void	token_quotes(const char **input, t_token **head,
 	}
 	else
 	{
-		printf("minishell: syntax error near unexpected token `%c'\n", quote);
-		minishell->error_code = 2;
+		ft_putstr_fd("minishell: syntax error near unexpected token '", 2);
+		ft_putchar_fd(quote, 2);
+		ft_putstr_fd("'\n", 2);
+		minishell->error_code = ERR_SYNTAX_QUOTE;
 	}
 }
