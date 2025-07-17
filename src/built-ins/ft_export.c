@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 18:14:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/14 21:25:10 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 18:28:12 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,13 @@ int	ft_export(t_command *cmd, t_program *minishell)
 	i = 1;
 	while (cmd->args[i])
 	{
+		if (ft_strncmp(cmd->args[i], "--", 2) == 0 && cmd->args[i][2])
+		{
+			ft_putstr_fd("export: --: invalid option\n", STDERR_FILENO);
+			ft_putstr_fd("export: usage: export [-fn] [name[=value] ...] or export -p\n", STDERR_FILENO);
+			minishell->error_code = 2;
+			return (2);
+		}
 		if (process_export_arg(cmd->args[i], minishell) != 0)
 			ret = 1;
 		i++;

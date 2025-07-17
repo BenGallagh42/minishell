@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_redirection.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 19:38:11 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/15 12:20:29 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 17:55:12 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static void	handle_heredoc_redir(void)
 	close(fd);
 	unlink("/tmp/minishell_heredoc");
 }
+
 
 void	handle_redirections(t_redirection *redirs, t_program *minishell)
 {
