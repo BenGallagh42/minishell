@@ -6,12 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 18:14:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/14 21:25:10 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/16 20:50:09 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Splits arg into key and value
 static int	get_key_value(const char *arg, char **key, char **value)
 {
 	char	*eq;
@@ -36,9 +37,10 @@ static int	get_key_value(const char *arg, char **key, char **value)
 	return (0);
 }
 
+// Handles invalid identifier error
 static int	handle_invalid_identifier(const char *arg, char *key, char *value)
 {
-	ft_putstr_fd("export: ", STDERR_FILENO);
+	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
 	ft_putstr_fd((char *)arg, STDERR_FILENO);
 	ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
 	free(key);
@@ -46,6 +48,7 @@ static int	handle_invalid_identifier(const char *arg, char *key, char *value)
 	return (1);
 }
 
+// Removes quotes from value
 static char	*remove_value_quotes(char *value)
 {
 	char	*new_value;
@@ -65,6 +68,7 @@ static char	*remove_value_quotes(char *value)
 	return (value);
 }
 
+// Processes one export argument
 static int	process_export_arg(const char *arg, t_program *minishell)
 {
 	char	*key;
@@ -85,6 +89,7 @@ static int	process_export_arg(const char *arg, t_program *minishell)
 	return (ret);
 }
 
+// Exports environment variables
 int	ft_export(t_command *cmd, t_program *minishell)
 {
 	int		i;

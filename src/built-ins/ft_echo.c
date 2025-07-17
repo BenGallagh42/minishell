@@ -6,12 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:09:45 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/10 15:23:16 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/16 20:51:34 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Checks if argument is valid -n flag
 static int	is_valid_n_flag(const char *arg)
 {
 	size_t	i;
@@ -28,6 +29,7 @@ static int	is_valid_n_flag(const char *arg)
 	return (1);
 }
 
+// Prints echo arguments
 static void	echo_print(char **args, int start, int suppress_newline)
 {
 	int	i;
@@ -47,6 +49,7 @@ static void	echo_print(char **args, int start, int suppress_newline)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 }
 
+// Prints arguments with optional -n flag
 int	ft_echo(t_command *command)
 {
 	int	suppress_newline;

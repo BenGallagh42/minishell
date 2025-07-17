@@ -6,64 +6,95 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:16:06 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/11 21:42:06 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:27:00 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Update existing variable
-static int update_var(char **envp, char *new_var, int index)
+// Updates existing variable
+static int	update_var(char **envp, char *new_var, int index)
 {
-	free(envp[index]); /* free old value */
-	envp[index] = new_var; /* replace with new */
+	if (!envp || !new_var)
+		return (1);
+	free(envp[index]);
+	envp[index] = new_var;
 	return (0);
 }
 
-// Add new variable to envp
-static int add_new_var(const char *name, const char *value, t_program *minishell)
+// Handles invalid name error
+static int	handle_setenv_error(const char *name)
 {
-	char	*new_var;
+	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
+	if (name && name[0])
+		ft_putstr_fd((char *)name, STDERR_FILENO);
+	else
+		ft_putstr_fd("''", STDERR_FILENO);
+	ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
+	return (1);
+}
+
+// Allocates and copies envp with new variable
+static int	alloc_and_copy_envp(char *new_var, t_program *minishell)
+{
 	char	**new_envp;
 	int		n;
 
-	if (value == NULL)
-		value = ""; /* default empty value */
-	new_var = create_new_var(name, value); /* create "name=value" */
-	if (!new_var)
-		return (-1);
 	n = 0;
 	while (minishell->envp && minishell->envp[n])
-		n++; /* count current envp */
-	new_envp = alloc_new_envp(n); /* allocate new array */
+		n++;
+	new_envp = alloc_new_envp(n);
 	if (!new_envp)
 	{
 		free(new_var);
-		return (-1);
+		return (1);
 	}
-	copy_and_add_to_envp(new_envp, minishell->envp, new_var, n); /* copy and add */
-	free(minishell->envp); /* free old array */
-	minishell->envp = new_envp; /* update envp */
+	copy_and_add_to_envp(new_envp, minishell->envp, new_var, n);
+	free(minishell->envp);
+	minishell->envp = new_envp;
 	return (0);
 }
 
-// Set or add environment variable
-int ft_setenv(const char *name, const char *value, t_program *minishell)
+// Adds new variable to envp
+static int	add_new_var(const char *name, const char *value,
+	t_program *minishell)
+{
+	char	*new_var;
+
+	if (!minishell || !name)
+		return (1);
+	if (value == NULL)
+		value = "";
+	new_var = create_new_var(name, value);
+	if (!new_var)
+	{
+		ft_putstr_fd("minishell: export: memory allocation failed\n",
+			STDERR_FILENO);
+		return (1);
+	}
+	return (alloc_and_copy_envp(new_var, minishell));
+}
+
+// Sets or adds environment variable
+int	ft_setenv(const char *name, const char *value, t_program *minishell)
 {
 	char	*new_var;
 	int		index;
 
-	if (name == NULL || ft_strchr(name, '=') != NULL) /* invalid name */
-		return (-1);
-	index = find_env_index(name, minishell->envp); /* find if exists */
-	new_var = create_new_var(name, value); /* create "name=value" */
+	if (!name || !name[0] || !minishell || ft_strchr(name, '=') != NULL)
+		return (handle_setenv_error(name));
+	index = find_env_index(name, minishell->envp);
+	new_var = create_new_var(name, value);
 	if (!new_var)
-		return (-1);
+	{
+		ft_putstr_fd("minishell: export: memory allocation failed\n",
+			STDERR_FILENO);
+		return (1);
+	}
 	if (index != -1)
 	{
-		update_var(minishell->envp, new_var, index); /* update existing */
+		update_var(minishell->envp, new_var, index);
 		return (0);
 	}
-	else
-		return (add_new_var(name, value, minishell)); /* add new */
+	return (add_new_var(name, value, minishell));
 }

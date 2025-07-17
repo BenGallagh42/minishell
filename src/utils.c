@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 17:05:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/18 18:40:52 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 21:43:24 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,24 @@ void	free_tokens(t_token *tokens)
 		free(tokens);
 		tokens = next;
 	}
+}
+
+int	is_numeric(const char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || str[0] == '\0')
+		return (0);
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 void	print_tokens(t_token *tokens)

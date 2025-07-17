@@ -45,18 +45,20 @@ PARSER_SRC = $(PARSER_DIR)/parser.c \
 EXEC_SRC =	$(EXEC_DIR)/exec_main.c \
 			$(EXEC_DIR)/exec_builtin.c \
 			$(EXEC_DIR)/exec_redirection.c \
-			$(EXEC_DIR)/exec_utils.c
+			$(EXEC_DIR)/exec_utils.c 
 
 BUILTINS_SRC =	$(BUILTINS_DIR)/ft_echo.c \
 				$(BUILTINS_DIR)/ft_pwd.c \
 				$(BUILTINS_DIR)/ft_env.c \
 				$(BUILTINS_DIR)/ft_cd.c \
+				$(BUILTINS_DIR)/ft_cd2.c \
 				$(BUILTINS_DIR)/ft_exit.c \
 				$(BUILTINS_DIR)/ft_setenv.c \
 				$(BUILTINS_DIR)/ft_setenv2.c \
 				$(BUILTINS_DIR)/ft_export.c \
+				$(BUILTINS_DIR)/ft_unset.c \
 				$(BUILTINS_DIR)/ft_export2.c
-
+				
 MAIN_SRC =	$(MAIN_DIR)/main.c \
 			$(MAIN_DIR)/utils.c \
 			$(MAIN_DIR)/shell.c

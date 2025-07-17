@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:25:58 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/08 19:39:24 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:10:02 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	minishell.token = NULL;
+	minishell.input_buffer = NULL;
+	minishell.cmd_list = NULL;
+	minishell.envp = NULL;
+	minishell.error_code = 0;
 	init_shell(&minishell, envp);
 	run_shell(&minishell);
 	free_shell(&minishell);

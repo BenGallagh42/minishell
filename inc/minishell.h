@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/11 22:52:16 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:33:10 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ enum e_error_code
 	ERR_NO_COMMAND = 1,
 	ERR_SYNTAX_TOKEN,
 	ERR_SYNTAX_PIPE,
+	ERR_SYNTAX_QUOTE,
 	ERR_FILE_NOT_FOUND,
 	ERR_PERMISSION_DENIED,
 	ERR_MEMORY,
@@ -198,25 +199,32 @@ void			free_cmd(t_command *cmd, t_list *args, t_list *redirs);
 void			free_lists(t_list **args, t_list **redirs);
 
 //EXECUTION FUNCTIONS
-// Handle main executioner logic
 void			execute_commands(t_command *cmd, t_program *minishell);
-
-// Handle builtins
 void			execute_builtin(t_command *cmd, t_program *minishell);
 
 // BUILT_IN FUNCTIONS
-// ft_export
+//ft_export
 int				ft_export(t_command *cmd, t_program *minishell);
 int				is_valid_identifier(const char *key);
 char			**sort_env(char **envp);
 void			print_sorted_env(char **sorted);
-
+// ft_echo
 int				ft_echo(t_command *command);
+// ft_pwd
 int				ft_pwd(void);
+//ft_env
 int				ft_env(t_command *cmd, t_program *minishell);
+// ft_cd
 int				ft_cd(t_command *cmd, t_program *minishell);
+int				check_cd_errors(t_command *cmd, char **old_pwd,
+					t_program *minishell);
+int				change_directory(char *target, char *old_pwd,
+					t_program *minishell);
+int				update_pwd(char *old_pwd, t_program *minishell);
+// ft_exit
 int				ft_exit(t_command *cmd, t_program *minishell);
-
+// ft_unset
+int				ft_unset(t_command *cmd, t_program *minishell);
 // ft_setenv
 int				ft_setenv(const char *name, const char *value,
 					t_program *minishell);
@@ -226,13 +234,12 @@ char			**alloc_new_envp(int n);
 void			copy_and_add_to_envp(char **new_envp, char **old_envp,
 					char *new_var, int n);
 
-
-
 // Handle redirections
 void			handle_redirections(t_redirection *redirs,
 					t_program *minishell);
 
 // Utils
 char			*find_command_path(char *cmd, t_program *minishell);
+int				is_numeric(const char *str);
 
 #endif
