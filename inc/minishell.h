@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/11 22:52:16 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 11:35:53 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ enum e_error_code
 	ERR_NO_COMMAND = 1,
 	ERR_SYNTAX_TOKEN,
 	ERR_SYNTAX_PIPE,
+	ERR_SYNTAX_QUOTE,
 	ERR_FILE_NOT_FOUND,
 	ERR_PERMISSION_DENIED,
 	ERR_MEMORY,
