@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_dollar.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 16:35:22 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/11 16:48:35 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/18 16:51:59 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,27 @@ static void	handle_dollar_quotes(const char **input,
 }
 
 static void	handle_dollar_question(const char **input,
-	t_token **head, t_token **curr)
+	t_token **head, t_token **curr, t_program *minishell)
 {
+	char	*exit_status;
+
 	(*input)++;
-	add_token(head, curr, TKN_WORD, ft_strdup("$?"));
+	exit_status = ft_itoa(minishell->error_code);
+	if (!exit_status)
+		return ;
+	add_token(head, curr, TKN_WORD, exit_status);
 }
 
 static void	handle_invalid_var(const char **input,
 	t_token **head, t_token **curr)
 {
-	// Just treat $ as a literal token
 	add_token(head, curr, TKN_WORD, ft_strdup("$"));
 	if (**input)
 		(*input)++;
 }
 
-void	token_dollar(const char **input, t_token **head, t_token **curr)
+void	token_dollar(const char **input, t_token **head, t_token **curr,
+	t_program *minishell)
 {
 	const char	*start;
 
@@ -54,7 +59,7 @@ void	token_dollar(const char **input, t_token **head, t_token **curr)
 	if (**input == '"')
 		return (handle_dollar_quotes(input, head, curr));
 	if (**input == '?')
-		return (handle_dollar_question(input, head, curr));
+		return (handle_dollar_question(input, head, curr, minishell));
 	if (!ft_isalpha(**input) && **input != '_')
 		return (handle_invalid_var(input, head, curr));
 	while (**input && (ft_isalnum(**input) || **input == '_'))

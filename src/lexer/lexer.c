@@ -6,23 +6,29 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 19:20:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/18 18:21:34 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/18 16:56:55 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+static void	handle_dollar_token(const char **input, t_token **head,
+	t_token **current, t_program *minishell)
+{
+	token_dollar(input, head, current, minishell);
+}
+
 // Determines the type of token to process
 // and calls the appropriate tokenization function
 static void	process_lexer_token(const char **input, t_token **head,
-				t_token **current)
+	t_token **current, t_program *minishell)
 {
 	if (**input == '<' || **input == '>')
 		token_redirector_main(input, head, current);
 	else if (**input == '|' || **input == '&')
 		token_operator(input, head, current);
 	else if (**input == '$')
-		token_dollar(input, head, current);
+		handle_dollar_token(input, head, current, minishell);
 	else if (has_wildcard(*input))
 		token_wildcard(input, head, current);
 	else
@@ -66,7 +72,7 @@ t_token	*main_lexer(const char *input, t_program *minishell)
 		}
 		else
 		{
-			process_lexer_token(&input, &head, &current);
+			process_lexer_token(&input, &head, &current, minishell);
 		}
 	}
 	return (head);

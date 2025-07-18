@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 22:23:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 21:54:15 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:46:31 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,20 @@ static void	remove_var(char **envp, int index)
 	}
 }
 
-// Handles unset error for invalid identifier
-static int	handle_unset_error(char *arg)
-{
-	ft_putstr_fd("minishell: unset: ", STDERR_FILENO);
-	ft_putstr_fd(arg, STDERR_FILENO);
-	ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
-	return (1);
-}
-
 // Unsets environment variables
 int	ft_unset(t_command *cmd, t_program *minishell)
 {
-	int	i;
-	int	ret;
-	int	index;
+	int		i;
+	int		index;
 
 	if (!cmd || !minishell || !cmd->args)
-		return (1);
-	ret = 0;
+		return (0);
+
 	i = 1;
+
 	while (cmd->args[i])
 	{
-		if (!cmd->args[i][0] || !is_valid_identifier(cmd->args[i]))
-			ret = handle_unset_error(cmd->args[i]);
-		else
+		if (cmd->args[i][0] && is_valid_identifier(cmd->args[i]))
 		{
 			index = find_env_index(cmd->args[i], minishell->envp);
 			if (index != -1)
@@ -54,6 +43,6 @@ int	ft_unset(t_command *cmd, t_program *minishell)
 		}
 		i++;
 	}
-	minishell->error_code = ret;
-	return (ret);
+	minishell->error_code = 0;
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 22:32:49 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/18 16:56:20 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,15 @@ static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipe
 	handle_redirections(cmd->redirs, mini);
 	if (!cmd->args || !cmd->args[0] || !ft_strlen(cmd->args[0]))
 	{
-		ft_putstr_fd("minishell: : command not found\n", STDERR_FILENO);
+		ft_putstr_fd(cmd->args ? cmd->args[0] : "", STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit(127);
 	}
 	cmd_path = find_command_path(cmd->args[0], mini);
 	if (!cmd_path)
 	{
-		if (ft_strchr(cmd->args[0], '/'))
-			ft_putendl_fd("minishell: No such file or directory", STDERR_FILENO);
-		else
-			ft_putendl_fd("minishell: command not found", STDERR_FILENO);
+		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 		exit(127);
 	}
 	execve(cmd_path, cmd->args, mini->envp);

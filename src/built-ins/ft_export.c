@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 18:14:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/16 20:50:09 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/17 22:40:34 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	get_key_value(const char *arg, char **key, char **value)
 // Handles invalid identifier error
 static int	handle_invalid_identifier(const char *arg, char *key, char *value)
 {
-	ft_putstr_fd("minishell: export: ", STDERR_FILENO);
+	ft_putstr_fd("export: ", STDERR_FILENO);
 	ft_putstr_fd((char *)arg, STDERR_FILENO);
 	ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
 	free(key);

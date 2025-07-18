@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 22:33:10 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/18 16:55:46 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,8 @@ void			print_commands(t_command *cmd_list);
 t_token			*main_lexer(const char *input, t_program *minishell);
 void			add_token(t_token **head, t_token **curr, t_token_type type,
 					char *val);
-void			token_dollar(const char **input, t_token **head,
-					t_token **current);
+void			token_dollar(const char **input, t_token **head, t_token **curr,
+					t_program *minishell);
 void			token_operator(const char **input, t_token **head,
 					t_token **current);
 void			token_quotes(const char **input, t_token **head,
