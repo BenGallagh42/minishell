@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:44:34 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/11 18:01:40 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/18 17:38:23 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,20 @@ static void	process_redir_type(t_token **tokens, t_redirection *redir)
 static int	check_redir_syntax(t_token **tokens, t_program *minishell,
 				t_redirection *redir)
 {
-	if (!*tokens || ((*tokens)->type != TKN_WORD && (*tokens)->type != TKN_ENV))
+	if (!*tokens || ((*tokens)->type != TKN_WORD && (*tokens)->type != TKN_ENV
+			&& (*tokens)->type != TKN_WILDCARD))
 	{
 		if (!*tokens)
 			print_error_message(ERR_SYNTAX_TOKEN, "newline", minishell);
 		else
 			print_error_message(ERR_SYNTAX_TOKEN, (*tokens)->value, minishell);
+		free(redir);
+		return (0);
+	}
+	if ((*tokens)->type == TKN_WILDCARD)
+	{
+		ft_putendl_fd("minishell: ambiguous redirect", STDERR_FILENO);
+		minishell->error_code = 1;
 		free(redir);
 		return (0);
 	}

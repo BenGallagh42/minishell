@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_syntax.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:43:40 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/10 17:11:25 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/18 17:20:41 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	validate_token_sequence(t_token *tokens, t_program *minishell)
 	}
 	if (!has_command)
 	{
-		print_syntax_error("newline", minishell);
+		print_error_message(ERR_SYNTAX_TOKEN, "newline", minishell);
 		return (0);
 	}
 	return (1);
