@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/18 16:56:20 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 11:03:09 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ static void	close_pipe_ends(int *prev_pipe, int *pipefd, int is_piped)
 		*prev_pipe = -1;
 }
 
-static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipefd)
+static void	exec_child(t_command *cmd,
+t_program *mini, int prev_pipe, int *pipefd)
 {
 	char	*cmd_path;
 
