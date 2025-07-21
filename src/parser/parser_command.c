@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 19:08:21 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 21:48:45 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,20 @@ static int	process_redirs(t_token **current,
 }
 
 /* Processes tokens for the command, populating args and redirs lists */
-static int	process_command_tokens(t_token **current,
-	t_list **args, t_list **redirs, t_program *minishell)
+static int	process_command_tokens(t_token **current, t_list **args,
+	t_list **redirs, t_program *minishell)
 {
 	while (*current && (*current)->type != TKN_PIPE)
 	{
-		process_words(current, args, minishell);
-		if (process_redirs(current, redirs, minishell))
-			return (1);
+		if (is_redirection_token((*current)->type))
+		{
+			if (process_redirs(current, redirs, minishell))
+				return (1);
+		}
+		else
+		{
+			process_words(current, args, minishell);
+		}
 	}
 	return (0);
 }

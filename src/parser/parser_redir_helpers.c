@@ -3,85 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redir_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 19:30:37 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 12:39:11 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/21 21:51:25 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /* Handles heredoc by reading input until delimiter */
-int	handle_heredoc(t_redirection *redir, const char *delim,
-	t_program *minishell)
+int	handle_heredoc(t_redirection *redir, const char *delim, t_program *minishell)
 {
 	int		expand;
-	char	*content;
+	char	*expanded;
 
 	expand = !(delim[0] == '\'' || delim[0] == '"');
-	char *expanded = expand_and_remove_quotes(delim, minishell);
-	redir->target = expanded ? ft_strdup(expanded) : NULL;
-	free(expanded);
-	if (!redir->target)
-		return (0);
-	content = read_heredoc(redir->target, minishell, expand);
-	if (!content)
+	expanded = expand_and_remove_quotes(delim, minishell);
+	if (!expanded || *expanded == '\0')
+	{
+		redir->target = ft_strdup(delim);
+		if (!redir->target)
+			return (0);
+	}
+	else
+	{
+		redir->target = ft_strdup(expanded);
+		free(expanded);
+		if (!redir->target)
+			return (0);
+	}
+	redir->content = read_heredoc(redir->target, minishell, expand);
+	if (!redir->content)
 		return (free(redir->target), 0);
-	redir->content = content;
 	return (1);
 }
-
-// /* Validates input redirection by checking file existence and readability */
-// static int	validate_input_redir(t_redirection *redir, t_program *minishell)
-// {
-// 	if (!redir->target)
-// 		return (0);
-// 	if (access(redir->target, F_OK | R_OK) != 0)
-// 	{
-// 		print_error_message(ERR_FILE_NOT_FOUND, redir->target, minishell);
-// 		return (0);
-// 	}
-// 	return (1);
-// }
-
-// /* Validates output redirection by checking write permissions */
-// static int	validate_output_redir(t_redirection *redir,
-//t_program *minishell)
-// {
-// 	char	*slash;
-// 	char	*dir;
-
-// 	if (!redir->target)
-// 		return (0);
-// 	if (access(redir->target, F_OK) == 0 && access(redir->target, W_OK) != 0)
-// 	{
-// 		print_error_message(ERR_PERMISSION_DENIED, redir->target, minishell);
-// 		return (0);
-// 	}
-// 	if (access(redir->target, F_OK) != 0)
-// 	{
-// 		slash = strrchr(redir->target, '/');
-// 		if (!slash)
-// 			dir = ft_strdup(".");
-// 		else
-// 			dir = ft_substr(redir->target, 0, slash - redir->target);
-// 		if (!dir || access(dir, W_OK) != 0)
-// 		{
-// 			free(dir);
-// 			return (0);
-// 		}
-// 		free(dir);
-// 	}
-// 	return (1);
-// }
-
-// /* Dispatches redirection validation based on type */
-// int	validate_redir_target(t_redirection *redir, t_program *minishell)
-// {
-// 	if (redir->type == TKN_REDIR_IN)
-// 		return (validate_input_redir(redir, minishell));
-// 	if (redir->type == TKN_REDIR_OUT || redir->type == TKN_REDIR_APPEND)
-// 		return (validate_output_redir(redir, minishell));
-// 	return (1);
-// }
