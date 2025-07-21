@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:41:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 12:06:07 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 11:22:28 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	token_quotes(const char **input, t_token **head,
 	start = *input;
 	(*input)++;
 	end = scan_for_quote(input, quote);
-	if (end) 
+	if (end)
 	{
 		len = end - start + 1;
 		add_token(head, current, TKN_WORD, ft_strndup(start, len));
