@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 17:05:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 21:43:24 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:42:16 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ void	print_tokens(t_token *tokens)
 	printf("Lexer Output:\n");
 	while (current)
 	{
-		printf("  Token %d: %s (Type: %d)\n", i++, current->value, current->type);
+		printf("  Token %d: %s (Type: %d)\n", i++,
+			current->value, current->type);
 		current = current->next;
 	}
 }

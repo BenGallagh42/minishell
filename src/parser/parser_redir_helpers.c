@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redir_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 19:30:37 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/11 18:01:55 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:39:11 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	handle_heredoc(t_redirection *redir, const char *delim,
 // }
 
 // /* Validates output redirection by checking write permissions */
-// static int	validate_output_redir(t_redirection *redir, t_program *minishell)
+// static int	validate_output_redir(t_redirection *redir,
+//t_program *minishell)
 // {
 // 	char	*slash;
 // 	char	*dir;
