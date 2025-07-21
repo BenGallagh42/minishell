@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:00:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 19:45:52 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 21:13:26 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,10 @@ int	validate_file_arg(const char *arg, t_program *minishell)
 }
 
 // Expands a single token and returns a list containing the expanded result
-t_list	*get_expanded_list(t_token *token, t_program *minishell)
+t_list *get_expanded_list(t_token *token, t_program *minishell)
 {
 	char	*expanded;
+	char	*home;
 
 	if (token->type == TKN_WORD || token->type == TKN_WILDCARD)
 	{
@@ -50,7 +51,23 @@ t_list	*get_expanded_list(t_token *token, t_program *minishell)
 			&& ft_strcmp(minishell->cmd_list->args[0], "echo") == 0)
 			expanded = ft_strdup(token->value);
 		else
-			expanded = expand_and_remove_quotes(token->value, minishell);
+		{
+            if (token->value[0] == '~' && (token->value[1] == '\0' || token->value[1] == '/'))
+			{
+				home = ft_getenv("HOME", minishell->envp);
+				if (!home)
+				{
+					print_error_message(ERR_NO_COMMAND, "HOME not set", minishell);
+					return (NULL);
+				}
+				if (token->value[1] == '\0')
+					expanded = ft_strdup(home);
+				else
+					expanded = ft_strjoin(home, token->value + 1);
+			}
+			else
+				expanded = expand_and_remove_quotes(token->value, minishell);
+		}
 		if (expanded)
 			return (ft_lstnew(expanded));
 	}
