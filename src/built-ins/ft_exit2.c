@@ -3,26 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 09:35:03 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/21 09:38:56 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/21 20:12:07 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-static long long	handle_overflow(long long result, int digit, int sign)
-{
-	if (result > LLONG_MAX / 10
-		|| (result == LLONG_MAX / 10 && digit > LLONG_MAX % 10))
-	{
-		if (sign == 1)
-			return (LLONG_MAX);
-		return (LLONG_MIN);
-	}
-	return (0);
-}
 
 static void	init_atoll(const char *str, int *i, int *sign)
 {
@@ -41,15 +29,14 @@ long long	ft_atoll(const char *str)
 	long long	result;
 	int			sign;
 	int			i;
-	int			overflow;
 
 	result = 0;
 	init_atoll(str, &i, &sign);
 	while (str[i] && ft_isdigit(str[i]))
 	{
-		overflow = handle_overflow(result, str[i] - '0', sign);
-		if (overflow != 0)
-			return (overflow);
+		if (result > LLONG_MAX / 10
+			|| (result == LLONG_MAX / 10 && (str[i] - '0') > LLONG_MAX % 10))
+			return (sign == 1 ? LLONG_MAX : LLONG_MIN);
 		result = result * 10 + (str[i] - '0');
 		i++;
 	}

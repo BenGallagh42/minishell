@@ -6,13 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:00:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 19:23:37 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 19:45:52 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Checks if the command requires file argument validation */
+// Checks if the command requires file argument validation
 int	needs_file_validation(const char *cmd)
 {
 	const char	*file_cmds[] = {"head", "tail", NULL};
@@ -28,7 +28,7 @@ int	needs_file_validation(const char *cmd)
 	return (0);
 }
 
-/* Validates file existence and readability for command arguments */
+// Validates file existence and readability for command arguments
 int	validate_file_arg(const char *arg, t_program *minishell)
 {
 	if (access(arg, F_OK | R_OK) != 0)
@@ -44,17 +44,15 @@ t_list	*get_expanded_list(t_token *token, t_program *minishell)
 {
 	char	*expanded;
 
-	if (token->type == TKN_WORD)
+	if (token->type == TKN_WORD || token->type == TKN_WILDCARD)
 	{
-		expanded = expand_and_remove_quotes(token->value, minishell);
+		if (minishell->cmd_list && minishell->cmd_list->args
+			&& ft_strcmp(minishell->cmd_list->args[0], "echo") == 0)
+			expanded = ft_strdup(token->value);
+		else
+			expanded = expand_and_remove_quotes(token->value, minishell);
 		if (expanded)
 			return (ft_lstnew(expanded));
-		else
-			return (NULL);
-	}
-	else if (token->type == TKN_WILDCARD)
-	{
-		return (expand_wildcard(token->value, minishell));
 	}
 	return (NULL);
 }

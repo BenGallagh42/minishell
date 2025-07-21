@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 20:48:04 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 17:18:40 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/21 20:05:20 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	ft_exit(t_command *cmd, t_program *minishell)
 {
+	long long	ll_code;
 	int			code;
 	int			ret;
-	long long	ll_code;
 
 	if (!cmd || !minishell || !cmd->args)
 	{
@@ -30,8 +30,9 @@ int	ft_exit(t_command *cmd, t_program *minishell)
 	ll_code = ft_atoll(cmd->args[1]);
 	if (ll_code > INT_MAX || ll_code < INT_MIN)
 		return (print_exit_and_return_code(minishell, cmd->args[1]));
-	code = (int)ll_code;
-	ft_putendl_fd("exit", STDERR_FILENO);
+	code = (int)(ll_code % 256);
+	if (code < 0)
+		code += 256;
 	minishell->error_code = (unsigned char)code;
 	return (minishell->error_code);
 }

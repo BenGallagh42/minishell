@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:01:07 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/18 16:48:07 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 19:50:05 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,18 @@ void	*free_array_partial(char **array, size_t i)
 
 // Expands a variable from the input string
 void	expand_single_variable(const char **str, char **result,
-t_program *minishell)
+	t_program *minishell)
 {
 	const char	*start;
 	char		*var_name;
 	char		*var_value;
 
 	(*str)++;
+	if (**str == '\0' || **str == ' ' || **str == '"' || **str == '\'')
+	{
+		*result = ft_strjoin_free(*result, ft_strdup("$"));
+		return ;
+	}
 	if (**str == '?')
 	{
 		var_name = ft_strdup("?");
@@ -70,7 +75,7 @@ int	process_unquoted(const char **ptr, char **result, t_program *minishell)
 		expand_single_variable(ptr, result, minishell);
 		return (1);
 	}
-	else if (!append_literal(result, *ptr, 1))
+	if (!append_literal(result, *ptr, 1))
 	{
 		free(*result);
 		*result = NULL;
@@ -96,13 +101,13 @@ char	*ft_getenv(const char *name, char **envp)
 	size_t	len;
 	size_t	i;
 
-	if (name == NULL || envp == NULL)
+	if (!name || !envp)
 		return (NULL);
-	len = strlen(name);
+	len = ft_strlen(name);
 	i = 0;
-	while (envp[i] != NULL)
+	while (envp[i])
 	{
-		if (strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
 			return (&envp[i][len + 1]);
 		i++;
 	}
