@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 22:23:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 22:46:31 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 09:44:27 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,7 @@ int	ft_unset(t_command *cmd, t_program *minishell)
 
 	if (!cmd || !minishell || !cmd->args)
 		return (0);
-
 	i = 1;
-
 	while (cmd->args[i])
 	{
 		if (cmd->args[i][0] && is_valid_identifier(cmd->args[i]))
