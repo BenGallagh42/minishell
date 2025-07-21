@@ -3,27 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/03 20:50:51 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 12:35:41 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-
 /* Processes word and wildcard tokens */
-static void	process_words(t_token **current, t_list **args, t_program *minishell)
+static void	process_words(t_token **current,
+	t_list **args, t_program *minishell)
 {
 	t_list	*expanded_list;
 	int		is_first_arg;
 
 	is_first_arg = 1;
-	while (*current && ((*current)->type == TKN_WORD || (*current)->type == TKN_WILDCARD))
+	while (*current && ((*current)->type == TKN_WORD
+			|| (*current)->type == TKN_WILDCARD))
 	{
-		if ((*current)->type == TKN_WORD && !is_first_arg && needs_file_validation((*args)->content))
+		if ((*current)->type == TKN_WORD
+			&& !is_first_arg && needs_file_validation((*args)->content))
 		{
 			if (!validate_file_arg((*current)->value, minishell))
 			{
@@ -45,7 +46,8 @@ static void	process_words(t_token **current, t_list **args, t_program *minishell
 }
 
 /* Processes redirection tokens into redirection list */
-static int	process_redirs(t_token **current, t_list **redirs, t_program *minishell)
+static int	process_redirs(t_token **current,
+	t_list **redirs, t_program *minishell)
 {
 	t_redirection	*redir;
 
@@ -63,7 +65,8 @@ static int	process_redirs(t_token **current, t_list **redirs, t_program *minishe
 }
 
 /* Processes tokens for the command, populating args and redirs lists */
-static int	process_command_tokens(t_token **current, t_list **args, t_list **redirs, t_program *minishell)
+static int	process_command_tokens(t_token **current,
+	t_list **args, t_list **redirs, t_program *minishell)
 {
 	while (*current && (*current)->type != TKN_PIPE)
 	{
@@ -75,7 +78,8 @@ static int	process_command_tokens(t_token **current, t_list **args, t_list **red
 }
 
 /* Finalizes the command by converting lists to arrays and performing checks */
-static t_command	*finalize_command(t_command *cmd, t_list *args, t_list *redirs)
+static t_command	*finalize_command(t_command *cmd,
+	t_list *args, t_list *redirs)
 {
 	cmd->args = list_to_array(args);
 	if (!cmd->args || cmd->args[0] == NULL)
