@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:00:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/03 20:49:17 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 19:23:37 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /* Checks if the command requires file argument validation */
 int	needs_file_validation(const char *cmd)
 {
-	const char	*file_cmds[] = {"cat", "grep", "head", "tail", NULL};
+	const char	*file_cmds[] = {"head", "tail", NULL};
 	int			i;
 
 	i = 0;

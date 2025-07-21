@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 12:35:41 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/21 19:08:21 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ static void	process_words(t_token **current,
 		if ((*current)->type == TKN_WORD
 			&& !is_first_arg && needs_file_validation((*args)->content))
 		{
-			if (!validate_file_arg((*current)->value, minishell))
+			if (ft_strchr((*current)->value, '/')
+				&& !validate_file_arg((*current)->value, minishell))
 			{
 				ft_lstclear(args, free);
 				*current = (*current)->next;
@@ -117,7 +118,12 @@ t_command	*parse_simple_cmd(t_token **tokens, t_program *minishell)
 	}
 	*tokens = current;
 	cmd = finalize_command(cmd, args, redirs);
-	if (cmd && cmd->args && cmd->args[0])
+	if (!cmd)
+	{
+		free(cmd);
+		return (NULL);
+	}
+	if (cmd->args && cmd->args[0])
 		cmd->is_builtin = is_builtin(cmd->args[0]);
 	return (cmd);
 }

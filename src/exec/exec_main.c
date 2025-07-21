@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 11:03:09 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/21 18:58:16 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ static void	close_pipe_ends(int *prev_pipe, int *pipefd, int is_piped)
 		*prev_pipe = -1;
 }
 
-static void	exec_child(t_command *cmd,
-t_program *mini, int prev_pipe, int *pipefd)
+static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipefd)
 {
 	char	*cmd_path;
 
@@ -46,6 +45,7 @@ t_program *mini, int prev_pipe, int *pipefd)
 	{
 		ft_putstr_fd(cmd->args ? cmd->args[0] : "", STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		free_command(cmd);
 		exit(127);
 	}
 	cmd_path = find_command_path(cmd->args[0], mini);
@@ -53,11 +53,13 @@ t_program *mini, int prev_pipe, int *pipefd)
 	{
 		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		free_command(cmd);
 		exit(127);
 	}
 	execve(cmd_path, cmd->args, mini->envp);
 	perror(cmd->args[0]);
 	free(cmd_path);
+	free_command(cmd);
 	exit(126);
 }
 

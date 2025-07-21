@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 20:44:34 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/18 17:38:23 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 19:07:40 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,20 +67,13 @@ static int	expand_and_validate_target(t_token **tokens, t_redirection *redir,
 	if (redir->type == TKN_REDIR_HEREDOC)
 	{
 		if (!handle_heredoc(redir, current->value, minishell))
-		{
-			free(redir);
 			return (0);
-		}
 	}
 	else
 	{
 		redir->target = expand_and_remove_quotes(current->value, minishell);
 		if (!redir->target)
-		{
-			free(redir->target);
-			free(redir);
 			return (0);
-		}
 		redir->content = NULL;
 	}
 	*tokens = current->next;
