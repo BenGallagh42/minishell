@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/18 17:37:32 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 09:36:25 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,11 @@ int				change_directory(char *target, char *old_pwd,
 int				update_pwd(char *old_pwd, t_program *minishell);
 // ft_exit
 int				ft_exit(t_command *cmd, t_program *minishell);
+long long		ft_atoll(const char *str);
+int				handle_exit_errors(t_command *cmd, t_program *minishell);
+int				print_exit_and_return_code(t_program *minishell,
+					const char *arg);
+
 // ft_unset
 int				ft_unset(t_command *cmd, t_program *minishell);
 // ft_setenv
