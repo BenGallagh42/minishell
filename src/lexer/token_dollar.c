@@ -6,7 +6,19 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 16:35:22 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 19:57:27 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/22 16:45:57 by bboulmie         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_dollar.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/11 16:35:22 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/22 17:30:00 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +56,16 @@ static void	handle_dollar_question(const char **input,
 static void	handle_invalid_var(const char **input,
 	t_token **head, t_token **curr)
 {
-	add_token(head, curr, TKN_WORD, ft_strdup("$"));
-	if (**input)
-		(*input)++;
+	(*input)++;
+	add_token(head, curr, TKN_WORD, ft_strdup(""));
 }
 
 void	token_dollar(const char **input, t_token **head, t_token **curr,
 	t_program *minishell)
 {
 	const char	*start;
+	char		*var_name;
+	char		*var_value;
 
 	start = *input;
 	(*input)++;
@@ -64,5 +77,10 @@ void	token_dollar(const char **input, t_token **head, t_token **curr,
 		return (handle_invalid_var(input, head, curr));
 	while (**input && (ft_isalnum(**input) || **input == '_'))
 		(*input)++;
-	add_token(head, curr, TKN_WORD, ft_strndup(start, *input - start));
+	var_name = ft_strndup(start + 1, *input - start - 1);
+	if (!var_name)
+		return ;
+	var_value = ft_getenv(var_name, minishell->envp);
+	add_token(head, curr, TKN_WORD, var_value ? ft_strdup(var_value) : ft_strdup(""));
+	free(var_name);
 }

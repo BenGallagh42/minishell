@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 17:05:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 12:42:16 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/22 16:20:44 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
-
-void	free_tokens(t_token *tokens)
-{
-	t_token	*next;
-
-	while (tokens)
-	{
-		next = tokens->next;
-		free(tokens->value);
-		free(tokens);
-		tokens = next;
-	}
-}
 
 int	is_numeric(const char *str)
 {
