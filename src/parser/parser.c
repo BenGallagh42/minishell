@@ -4,9 +4,9 @@
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
+/*                                               ，全   +#+           */
 /*   Created: 2025/05/14 17:31:38 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/14 22:02:36 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:45:00 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,28 @@ t_command	*parse_pipeline(t_token **tokens, t_program *minishell)
 /* Performs initial checks on tokens and syntax */
 static int	preliminary_checks(t_token *tokens, t_program *minishell)
 {
-	if (!tokens || !tokens->value || !*tokens->value)
+	t_token	*current;
+	int		has_non_empty;
+
+	if (!tokens)
+		return (1); // Silently return for empty input
+	current = tokens;
+	has_non_empty = 0;
+	while (current)
 	{
-		print_error_message(ERR_NO_COMMAND, NULL, minishell);
-		return (1);
+		if (current->value && *current->value)
+			has_non_empty = 1;
+		current = current->next;
 	}
+	if (!has_non_empty)
+		return (1); // Silently return for all empty tokens
 	if (has_token_errors(tokens))
 	{
 		print_error_message(ERR_SYNTAX_TOKEN, tokens->value, minishell);
 		return (1);
 	}
 	if (!check_syntax(tokens, minishell))
-	{
 		return (1);
-	}
 	return (0);
 }
 

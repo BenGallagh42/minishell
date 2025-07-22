@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:28:18 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/05 16:05:59 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/22 16:29:26 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,18 @@ void	add_token(t_token **head, t_token **curr, t_token_type type, char *val)
 
 	new_token = malloc(sizeof(t_token));
 	if (!new_token)
+	{
+		free(val);
 		return ;
+	}
 	new_token->type = type;
 	new_token->value = ft_strdup(val);
+	if (!new_token->value)
+	{
+		free(new_token);
+		free(val);
+		return ;
+	}
 	new_token->error = 0;
 	new_token->next = NULL;
 	if (*curr)
@@ -29,4 +38,5 @@ void	add_token(t_token **head, t_token **curr, t_token_type type, char *val)
 	else
 		*head = new_token;
 	*curr = new_token;
+	free(val);
 }
