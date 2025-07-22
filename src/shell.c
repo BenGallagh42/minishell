@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 18:44:16 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 23:18:29 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/21 23:26:11 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,9 @@ void	run_shell(t_program *minishell)
 		tokens = main_lexer(input, minishell);
 		if (tokens)
 		{
-			print_tokens(tokens);
 			commands = main_parser(tokens, minishell);
 			if (commands)
 			{
-				print_commands(commands);
 				execute_commands(commands, minishell);
 				free_command(commands);
 			}
