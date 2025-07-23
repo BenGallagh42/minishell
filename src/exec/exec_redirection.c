@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 19:38:11 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 22:05:31 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/23 17:49:27 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,45 +63,59 @@ static void	handle_append_redir(t_redirection *redir)
 	close(fd);
 }
 
-static void	handle_input_redir(t_redirection *redir)
+static void	handle_input_redir(t_redirection *redir, t_program *minishell)
 {
 	int	fd;
 
+	if (!redir->target || !*redir->target)
+	{
+		print_error_message(ERR_FILE_NOT_FOUND, NULL, minishell);
+		exit(1);
+	}
 	fd = open(redir->target, O_RDONLY);
 	if (fd == -1)
 	{
-		perror(redir->target);
+		print_error_message(ERR_FILE_NOT_FOUND, redir->target, minishell);
 		exit(1);
 	}
-	dup2(fd, STDIN_FILENO);
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		print_error_message(ERR_MEMORY, NULL, minishell);
+		close(fd);
+		exit(1);
+	}
 	close(fd);
 }
 
 static void	handle_heredoc_redir(t_redirection *redir, t_program *minishell)
 {
 	int		fd;
-	char		tmp_file[32];
+	char	tmp_file[32];
 	static int	heredoc_count = 0;
 
-	generate_tmp_filename(tmp_file, heredoc_count++); // Use custom function for unique file name
+	generate_tmp_filename(tmp_file, heredoc_count++);
 	fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		perror("heredoc");
-		minishell->error_code = 1;
-		return;
+		print_error_message(ERR_FILE_NOT_FOUND, "heredoc", minishell);
+		exit(1);
 	}
 	write(fd, redir->content, ft_strlen(redir->content));
 	close(fd);
 	fd = open(tmp_file, O_RDONLY);
 	if (fd == -1)
 	{
-		perror("heredoc");
-		minishell->error_code = 1;
+		print_error_message(ERR_FILE_NOT_FOUND, "heredoc", minishell);
 		unlink(tmp_file);
-		return;
+		exit(1);
 	}
-	dup2(fd, STDIN_FILENO);
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		print_error_message(ERR_MEMORY, NULL, minishell);
+		close(fd);
+		unlink(tmp_file);
+		exit(1);
+	}
 	close(fd);
 	unlink(tmp_file);
 }
@@ -115,7 +129,7 @@ void	handle_redirections(t_redirection *redirs, t_program *minishell)
 		else if (redirs->type == TKN_REDIR_APPEND)
 			handle_append_redir(redirs);
 		else if (redirs->type == TKN_REDIR_IN)
-			handle_input_redir(redirs);
+			handle_input_redir(redirs, minishell);
 		else if (redirs->type == TKN_REDIR_HEREDOC)
 			handle_heredoc_redir(redirs, minishell);
 		redirs = redirs->next;

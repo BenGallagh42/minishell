@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 17:44:26 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/18 16:48:01 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/23 18:06:40 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,20 @@
 // Frees a NULL-terminated array of strings
 void	ft_free_array(char **array)
 {
-	size_t	i;
+    size_t	i;
 
-	i = 0;
-	if (array == NULL)
-		return ;
-	while (array[i] != NULL)
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
+    if (!array)
+    {
+        return ;
+    }
+    i = 0;
+    while (array[i])
+    {
+        free(array[i]);
+        array[i] = NULL;
+        i++;
+    }
+    free(array);
 }
 
 // Iterates through tokens and chek their error code 

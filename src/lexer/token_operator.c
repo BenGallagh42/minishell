@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:49:34 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/20 17:55:26 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/23 18:04:12 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	check_consecutive_operators(const char *input, t_token *current_token)
 	if (*next_char == '<' || *next_char == '>' || *next_char == '|'
 		|| *next_char == '&')
 	{
-		printf("minishell: syntax error");
+		ft_printf("minishell: syntax error");
 		current_token->error = 1;
 	}
 }

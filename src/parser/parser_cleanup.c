@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 18:02:26 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/10 19:15:26 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/23 16:50:44 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,19 +63,22 @@ void	free_cmd(t_command *cmd, t_list *args, t_list *redirs)
 {
 	if (cmd)
 	{
-		free(cmd->args);
-		free(cmd->redirs);
+		if (cmd->args)
+			ft_free_array(cmd->args);
+		if (cmd->redirs)
+			free_redirs(cmd->redirs);
 		free(cmd);
 	}
-	ft_lstclear(&args, free);
-	ft_lstclear(&redirs, free_redirection);
+	if (args)
+		ft_lstclear(&args, free);
+	if (redirs)
+		ft_lstclear(&redirs, free_redirection);
 }
 
 /* Frees temporary lists */
 void	free_lists(t_list **args, t_list **redirs)
 {
-	if (*args)
+	if (args && *args)
 		ft_lstclear(args, free);
-	if (*redirs)
-		ft_lstclear(redirs, NULL);
+	(void)redirs;
 }

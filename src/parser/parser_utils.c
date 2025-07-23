@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:56:06 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/06/05 18:18:26 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/23 16:50:24 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ char	**list_to_array(t_list *list)
 t_redirection	*list_to_redir_array(t_list *list)
 {
 	t_redirection	*head;
+	t_redirection	*new;
 	t_redirection	*tail;
 	t_list			*current;
 
@@ -67,11 +68,18 @@ t_redirection	*list_to_redir_array(t_list *list)
 	current = list;
 	while (current)
 	{
+		new = malloc(sizeof(t_redirection));
+		if (!new)
+			return (free_redirs(head), NULL);
+		*new = *(t_redirection *)current->content;
+		new->target = ft_strdup(((t_redirection *)current->content)->target);
+		new->content = ft_strdup(((t_redirection *)current->content)->content);
+		new->next = NULL;
 		if (!head)
-			head = current->content;
+			head = new;
 		else
-			tail->next = current->content;
-		tail = current->content;
+			tail->next = new;
+		tail = new;
 		current = current->next;
 	}
 	return (head);

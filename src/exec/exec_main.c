@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/22 19:50:46 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/23 17:48:48 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipe
 {
 	char	*cmd_path;
 
+	handle_redirections(cmd->redirs, mini);
 	if (prev_pipe != -1)
 	{
 		dup2(prev_pipe, STDIN_FILENO);
@@ -40,26 +41,22 @@ static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipe
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
 	}
-	handle_redirections(cmd->redirs, mini);
 	if (!cmd->args || !cmd->args[0] || !ft_strlen(cmd->args[0]))
 	{
-		ft_putstr_fd(cmd->args ? cmd->args[0] : "", STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		print_error_message(ERR_NO_COMMAND, cmd->args ? cmd->args[0] : "", mini);
 		free_command(cmd);
 		exit(127);
 	}
 	cmd_path = find_command_path(cmd->args[0], mini);
 	if (!cmd_path)
 	{
-		ft_putstr_fd(cmd->args[0], STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		print_error_message(ERR_NO_COMMAND, cmd->args[0], mini);
 		free_command(cmd);
 		exit(127);
 	}
 	execve(cmd_path, cmd->args, mini->envp);
-	perror(cmd->args[0]);
+	print_error_message(ERR_FILE_NOT_FOUND, cmd->args[0], mini);
 	free(cmd_path);
-	free_command(cmd);
 	exit(126);
 }
 
@@ -68,6 +65,7 @@ static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 	int	i;
 	int	prev_pipe;
 	int	pipefd[2];
+	int	stdout_backup;
 
 	i = -1;
 	prev_pipe = -1;
@@ -75,15 +73,26 @@ static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 	{
 		if (cmd->is_builtin && count == 1)
 		{
+			stdout_backup = dup(STDOUT_FILENO);
+			if (stdout_backup == -1)
+				return (print_error_message(ERR_MEMORY, NULL, mini));
 			handle_redirections(cmd->redirs, mini);
 			execute_builtin(cmd, mini);
+			dup2(stdout_backup, STDOUT_FILENO);
+			close(stdout_backup);
 			return ;
 		}
 		if (cmd->is_piped && pipe(pipefd) == -1)
-			exit(EXIT_FAILURE);
+		{
+			print_error_message(ERR_PIPE, NULL, mini);
+			return ;
+		}
 		pids[i] = fork();
 		if (pids[i] == -1)
-			exit(EXIT_FAILURE);
+		{
+			print_error_message(ERR_FORK, NULL, mini);
+			return ;
+		}
 		if (pids[i] == 0)
 			exec_child(cmd, mini, prev_pipe, pipefd);
 		close_pipe_ends(&prev_pipe, pipefd, cmd->is_piped);
@@ -98,7 +107,7 @@ void	execute_commands(t_command *cmd, t_program *minishell)
 	t_command	*tmp;
 	int			count;
 	pid_t		*pids;
-	int			status;
+	int			status = 0;
 	int			j;
 
 	count = 0;
@@ -107,14 +116,21 @@ void	execute_commands(t_command *cmd, t_program *minishell)
 		tmp = tmp->next;
 	pids = malloc(sizeof(pid_t) * count);
 	if (!pids)
-		exit(EXIT_FAILURE);
+	{
+		print_error_message(ERR_MEMORY, NULL, minishell);
+		return ;
+	}
+	ft_memset(pids, 0, sizeof(pid_t) * count);
 	exec_loop(cmd, minishell, pids, count);
 	j = -1;
 	while (++j < count)
 	{
-		waitpid(pids[j], &status, 0);
-		if (WIFEXITED(status))
-			minishell->error_code = WEXITSTATUS(status);
+		if (pids[j] > 0)
+		{
+			waitpid(pids[j], &status, 0);
+			if (WIFEXITED(status))
+				minishell->error_code = WEXITSTATUS(status);
+		}
 	}
 	free(pids);
 }
