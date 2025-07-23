@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:16:06 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 22:27:00 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/23 19:15:46 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,15 @@ static int	alloc_and_copy_envp(char *new_var, t_program *minishell)
 	return (0);
 }
 
-// Adds new variable to envp
-static int	add_new_var(const char *name, const char *value,
-	t_program *minishell)
+// Sets or adds environment variable
+int	ft_setenv(const char *name, const char *value, t_program *minishell)
 {
 	char	*new_var;
+	int		index;
 
-	if (!minishell || !name)
-		return (1);
-	if (value == NULL)
+	if (!name || !name[0] || !minishell || ft_strchr(name, '='))
+		return (handle_setenv_error(name));
+	if (!value)
 		value = "";
 	new_var = create_new_var(name, value);
 	if (!new_var)
@@ -72,29 +72,8 @@ static int	add_new_var(const char *name, const char *value,
 			STDERR_FILENO);
 		return (1);
 	}
-	return (alloc_and_copy_envp(new_var, minishell));
-}
-
-// Sets or adds environment variable
-int	ft_setenv(const char *name, const char *value, t_program *minishell)
-{
-	char	*new_var;
-	int		index;
-
-	if (!name || !name[0] || !minishell || ft_strchr(name, '=') != NULL)
-		return (handle_setenv_error(name));
 	index = find_env_index(name, minishell->envp);
-	new_var = create_new_var(name, value);
-	if (!new_var)
-	{
-		ft_putstr_fd("minishell: export: memory allocation failed\n",
-			STDERR_FILENO);
-		return (1);
-	}
 	if (index != -1)
-	{
-		update_var(minishell->envp, new_var, index);
-		return (0);
-	}
-	return (add_new_var(name, value, minishell));
+		return (update_var(minishell->envp, new_var, index));
+	return (alloc_and_copy_envp(new_var, minishell));
 }

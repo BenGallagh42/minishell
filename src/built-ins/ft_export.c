@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 18:14:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 22:40:34 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/23 19:11:10 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,12 @@ static int	process_export_arg(const char *arg, t_program *minishell)
 	ret = ft_setenv(key, value, minishell);
 	free(key);
 	free(value);
+	if (ret != 0)
+	{
+		ft_putstr_fd("export: ", STDERR_FILENO);
+		ft_putstr_fd((char *)arg, STDERR_FILENO);
+		ft_putstr_fd(": error setting variable\n", STDERR_FILENO);
+	}
 	return (ret);
 }
 
@@ -100,6 +106,8 @@ int	ft_export(t_command *cmd, t_program *minishell)
 	if (cmd->args[1] == NULL)
 	{
 		sorted_env = sort_env(minishell->envp);
+		if (!sorted_env)
+			return (1);
 		print_sorted_env(sorted_env);
 		ft_free_array(sorted_env);
 		minishell->error_code = 0;
