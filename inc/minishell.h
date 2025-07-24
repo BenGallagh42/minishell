@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 17:18:28 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/24 19:58:47 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ void			token_operator(const char **input, t_token **head,
 					t_token **current);
 void			token_quotes(const char **input, t_token **head,
 					t_token **current, t_program *minishell);
+const char		*scan_for_quote(const char **input, char quote); // Added
 void			token_redirector_main(const char **input, t_token **head,
 					t_token **current);
 void			token_word(const char **input, t_token **head,
@@ -240,8 +241,7 @@ void			copy_and_add_to_envp(char **new_envp, char **old_envp,
 					char *new_var, int n);
 
 // Handle redirections
-void			handle_redirections(t_redirection *redirs,
-					t_program *minishell);
+
 
 // Utils
 char			*find_command_path(char *cmd, t_program *minishell);

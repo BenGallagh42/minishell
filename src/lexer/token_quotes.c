@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   token_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 18:41:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 11:22:28 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/24 19:59:07 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
 // Scans the input for the closing quote character
-static const char	*scan_for_quote(const char **input, char quote)
+const char	*scan_for_quote(const char **input, char quote)
 {
 	while (**input && **input != quote)
 		(*input)++;
