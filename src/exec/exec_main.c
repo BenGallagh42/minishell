@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/23 17:48:48 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 18:40:07 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,21 +43,26 @@ static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipe
 	}
 	if (!cmd->args || !cmd->args[0] || !ft_strlen(cmd->args[0]))
 	{
-		print_error_message(ERR_NO_COMMAND, cmd->args ? cmd->args[0] : "", mini);
+		mini->error_code = ERR_NO_COMMAND;
+		print_error_message(mini->error_code, cmd->args ? cmd->args[0] : "", mini);
 		free_command(cmd);
 		exit(127);
 	}
 	cmd_path = find_command_path(cmd->args[0], mini);
 	if (!cmd_path)
 	{
-		print_error_message(ERR_NO_COMMAND, cmd->args[0], mini);
+		print_error_message(mini->error_code, cmd->args[0], mini);
 		free_command(cmd);
+		if (mini->error_code == ERR_PERMISSION_DENIED)
+			exit(126);
 		exit(127);
 	}
 	execve(cmd_path, cmd->args, mini->envp);
-	print_error_message(ERR_FILE_NOT_FOUND, cmd->args[0], mini);
+	mini->error_code = ERR_NO_COMMAND;
+	print_error_message(mini->error_code, cmd->args[0], mini);
 	free(cmd_path);
-	exit(126);
+	free_command(cmd);
+	exit(127);
 }
 
 static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)

@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 18:44:16 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/22 16:20:25 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 18:13:31 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	init_shell(t_program *minishell, char **envp)
 	minishell->error_code = 0;
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
+	signal(SIGPIPE, SIG_IGN);
 }
 
 void	run_shell(t_program *minishell)

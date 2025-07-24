@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 19:50:39 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 11:16:25 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/24 18:31:34 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,41 @@ static char	*search_path_dirs(char *cmd, char **paths)
 
 char	*find_command_path(char *cmd, t_program *minishell)
 {
-	char	*path_env;
-	char	**paths;
+	char		*path_env;
+	char		**paths;
+	struct stat	sb;
 
-	if (!cmd || ft_strlen(cmd) == 0)
+	if (!cmd || !*cmd)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));
-		else
-			return (NULL);
+		if (stat(cmd, &sb) == 0)
+		{
+			if (S_ISDIR(sb.st_mode))
+			{
+				minishell->error_code = ERR_PERMISSION_DENIED;
+				return (NULL);
+			}
+			if (access(cmd, X_OK) == 0)
+				return (ft_strdup(cmd));
+		}
+		minishell->error_code = ERR_FILE_NOT_FOUND;
+		return (NULL);
 	}
 	path_env = ft_getenv("PATH", minishell->envp);
 	if (!path_env)
+	{
+		minishell->error_code = ERR_NO_COMMAND;
 		return (NULL);
+	}
 	paths = ft_split(path_env, ':');
 	if (!paths)
+	{
+		minishell->error_code = ERR_MEMORY;
 		return (NULL);
-	return (search_path_dirs(cmd, paths));
+	}
+	path_env = search_path_dirs(cmd, paths);
+	if (!path_env)
+		minishell->error_code = ERR_NO_COMMAND;
+	return (path_env);
 }

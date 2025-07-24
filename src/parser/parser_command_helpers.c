@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command_helpers.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:00:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/22 18:21:53 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/24 18:46:31 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,29 +45,38 @@ t_list *get_expanded_list(t_token *token, t_program *minishell)
 	char	*expanded;
 	char	*home;
 
-	if (token->type == TKN_WORD || token->type == TKN_WILDCARD)
+	if (token->type == TKN_WILDCARD)
+		return (expand_wildcard(token->value, minishell));
+	if (token->type == TKN_STATUS)
+	{
+		expanded = ft_itoa(minishell->error_code);
+		if (!expanded)
+		{
+			print_error_message(ERR_MEMORY, NULL, minishell);
+			return (NULL);
+		}
+		return (ft_lstnew(expanded));
+	}
+	if (token->type == TKN_WORD)
 	{
 		if (minishell->cmd_list && minishell->cmd_list->args
 			&& ft_strcmp(minishell->cmd_list->args[0], "echo") == 0)
 			expanded = ft_strdup(token->value);
-		else
+		else if (token->value[0] == '~' && (token->value[1] == '\0' || token->value[1] == '/'))
 		{
-            if (token->value[0] == '~' && (token->value[1] == '\0' || token->value[1] == '/'))
+			home = ft_getenv("HOME", minishell->envp);
+			if (!home)
 			{
-				home = ft_getenv("HOME", minishell->envp);
-				if (!home)
-				{
-					print_error_message(ERR_NO_COMMAND, "HOME not set", minishell);
-					return (NULL);
-				}
-				if (token->value[1] == '\0')
-					expanded = ft_strdup(home);
-				else
-					expanded = ft_strjoin(home, token->value + 1);
+				print_error_message(ERR_NO_COMMAND, "HOME not set", minishell);
+				return (NULL);
 			}
+			if (token->value[1] == '\0')
+				expanded = ft_strdup(home);
 			else
-				expanded = expand_and_remove_quotes(token->value, minishell);
+				expanded = ft_strjoin(home, token->value + 1);
 		}
+		else
+			expanded = expand_and_remove_quotes(token->value, minishell);
 		if (expanded)
 			return (ft_lstnew(expanded));
 	}

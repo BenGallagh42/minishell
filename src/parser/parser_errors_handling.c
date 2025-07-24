@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 19:18:44 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/18 17:39:57 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 18:21:52 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	print_pipe_error(t_program *minishell)
 }
 
 void	print_file_error(int error_code, const char *token_value,
-	t_program *minishell)
+		t_program *minishell)
 {
 	minishell->error_code = error_code;
 	if (error_code == ERR_FILE_NOT_FOUND)
@@ -42,7 +42,7 @@ void	print_file_error(int error_code, const char *token_value,
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd((char *)token_value, STDERR_FILENO);
-		ft_putendl_fd(": Permission denied", STDERR_FILENO);
+		ft_putendl_fd(": Is a directory", STDERR_FILENO);
 	}
 }
 
@@ -50,7 +50,14 @@ void	print_general_error(int error_code, t_program *minishell)
 {
 	minishell->error_code = error_code;
 	if (error_code == ERR_NO_COMMAND)
-		ft_putendl_fd("minishell: no command provided", STDERR_FILENO);
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		if (minishell->cmd_list && minishell->cmd_list->args[0])
+			ft_putstr_fd(minishell->cmd_list->args[0], STDERR_FILENO);
+		else
+			ft_putstr_fd("", STDERR_FILENO);
+		ft_putendl_fd(": command not found", STDERR_FILENO);
+	}
 	else if (error_code == ERR_MEMORY)
 		ft_putendl_fd("minishell: memory allocation failed", STDERR_FILENO);
 	else if (error_code == ERR_INTERRUPTED)
