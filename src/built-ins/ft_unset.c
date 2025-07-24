@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 22:23:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 09:44:27 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/24 15:00:47 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,17 @@
 // Removes a variable from envp
 static void	remove_var(char **envp, int index)
 {
+	char	*tmp;
+
+	if (!envp || !envp[index])
+		return ;
+	tmp = envp[index];
 	while (envp[index])
 	{
 		envp[index] = envp[index + 1];
 		index++;
 	}
+	free(tmp);
 }
 
 // Unsets environment variables
