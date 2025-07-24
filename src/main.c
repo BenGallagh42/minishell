@@ -12,6 +12,7 @@
 
 #include "../inc/minishell.h"
 
+// Initializes, runs, and frees the main minishell loop
 int	main(int argc, char **argv, char **envp)
 {
 	t_program	minishell;

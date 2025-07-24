@@ -30,6 +30,7 @@ void	check_consecutive_operators(const char *input, t_token *current_token)
 	}
 }
 
+// Determines the token type for logical/pipe/background operators (||, |, &&, &)
 t_token_type	get_operator_type(const char **input)
 {
 	if (**input == '|' && *(*input + 1) == '|')

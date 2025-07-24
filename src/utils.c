@@ -12,6 +12,7 @@
 
 #include "../inc/minishell.h"
 
+// Checks if the input string is a valid numeric value
 int	is_numeric(const char *str)
 {
 	int	i;
@@ -30,6 +31,7 @@ int	is_numeric(const char *str)
 	return (1);
 }
 
+// Prints all tokens in the token list for debugging purposes
 void	print_tokens(t_token *tokens)
 {
 	t_token	*current;
@@ -51,6 +53,7 @@ void	print_tokens(t_token *tokens)
 	}
 }
 
+// Prints all redirection entries linked to a command
 void	print_redirections(t_redirection *redirs)
 {
 	t_redirection	*current;
@@ -74,6 +77,7 @@ void	print_redirections(t_redirection *redirs)
 	}
 }
 
+// Prints the list of parsed commands with arguments and redirections
 void	print_commands(t_command *cmd_list)
 {
 	t_command	*current;

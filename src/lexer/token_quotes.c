@@ -22,6 +22,7 @@ static const char	*scan_for_quote(const char **input, char quote)
 	return (NULL);
 }
 
+// Determines the token type for logical/pipe/background operators (||, |, &&, &)
 void	token_quotes(const char **input, t_token **head,
 			t_token **current, t_program *minishell)
 {

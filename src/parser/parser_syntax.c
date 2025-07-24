@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+// Validates token sequence to ensure proper shell command syntax
 static int	validate_token_sequence(t_token *tokens, t_program *minishell)
 {
 	int		has_command;
@@ -37,6 +38,7 @@ static int	validate_token_sequence(t_token *tokens, t_program *minishell)
 	return (1);
 }
 
+// Entry point to check overall syntax of the token list
 int	check_syntax(t_token *tokens, t_program *minishell)
 {
 	if (!tokens)

@@ -12,6 +12,7 @@
 
 #include "../../inc/minishell.h"
 
+// Prints syntax error messages for invalid redirection sequences like <<< or <>
 static void	print_error(char redirector, char next_char, int count)
 {
 	if (count > 2)

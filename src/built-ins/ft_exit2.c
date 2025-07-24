@@ -12,6 +12,7 @@
 
 #include "../inc/minishell.h"
 
+// Initializes index and sign for the custom atoll function
 static void	init_atoll(const char *str, int *i, int *sign)
 {
 	*i = 0;
@@ -24,6 +25,7 @@ static void	init_atoll(const char *str, int *i, int *sign)
 	}
 }
 
+// Converts a string to a long long integer with overflow protection
 long long	ft_atoll(const char *str)
 {
 	long long	result;
@@ -43,6 +45,7 @@ long long	ft_atoll(const char *str)
 	return (sign * result);
 }
 
+// Handles errors for the 'exit' command:- non-numeric or too many arguments
 int	handle_exit_errors(t_command *cmd, t_program *minishell)
 {
 	if (!cmd->args[1])
@@ -68,6 +71,7 @@ int	handle_exit_errors(t_command *cmd, t_program *minishell)
 	return (-1);
 }
 
+// Prints an error message and sets exit code when exit argument is invalid
 int	print_exit_and_return_code(t_program *minishell, const char *arg)
 {
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);

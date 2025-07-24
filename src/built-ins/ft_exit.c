@@ -12,6 +12,7 @@
 
 #include "../inc/minishell.h"
 
+// Handles the 'exit' command, checks errors, and sets the correct exit code
 int	ft_exit(t_command *cmd, t_program *minishell)
 {
 	long long	ll_code;

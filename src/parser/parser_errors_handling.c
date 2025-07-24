@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+// Prints a syntax error for an unexpected token like newline or '|'
 void	print_syntax_error(const char *token_value, t_program *minishell)
 {
 	minishell->error_code = 2;
@@ -22,12 +23,14 @@ void	print_syntax_error(const char *token_value, t_program *minishell)
 	ft_putendl_fd("'", STDERR_FILENO);
 }
 
+// Prints a syntax error specifically for a pipe token
 void	print_pipe_error(t_program *minishell)
 {
 	minishell->error_code = 2;
 	ft_putendl_fd("minishell: syntax error near unexpected token `|'", STDERR_FILENO);
 }
 
+// Prints a file related error like file not found or permission denied
 void	print_file_error(int error_code, const char *token_value,
 	t_program *minishell)
 {
@@ -46,6 +49,7 @@ void	print_file_error(int error_code, const char *token_value,
 	}
 }
 
+// Prints general errors like memory failure or no command given
 void	print_general_error(int error_code, t_program *minishell)
 {
 	minishell->error_code = error_code;
@@ -59,6 +63,7 @@ void	print_general_error(int error_code, t_program *minishell)
 		ft_putendl_fd("minishell: unknown error", STDERR_FILENO);
 }
 
+// Dispatches error printing based on the error code type
 void	print_error_message(int error_code, const char *token_value,
 	t_program *minishell)
 {

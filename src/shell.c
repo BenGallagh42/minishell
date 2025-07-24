@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+// Initializes minishell environment variables and sets default signal handlers
 void	init_shell(t_program *minishell, char **envp)
 {
 	int	i;
@@ -38,6 +39,7 @@ void	init_shell(t_program *minishell, char **envp)
 	signal(SIGQUIT, SIG_IGN);
 }
 
+// Main shell loop which reads input, lexes, parses, executes, and frees memory
 void	run_shell(t_program *minishell)
 {
 	char		*input;
@@ -66,6 +68,7 @@ void	run_shell(t_program *minishell)
 	}
 }
 
+// Frees the duplicated environment variable array
 void	free_shell(t_program *minishell)
 {
 	int	i;
@@ -79,6 +82,7 @@ void	free_shell(t_program *minishell)
 	free(minishell->envp);
 }
 
+// Frees the linked list of tokens
 void	free_tokens(t_token *tokens)
 {
 	t_token	*next;

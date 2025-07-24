@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+// Closes old pipe ends and sets up the next read end if piped
 static void	close_pipe_ends(int *prev_pipe, int *pipefd, int is_piped)
 {
 	if (*prev_pipe != -1)
@@ -25,6 +26,7 @@ static void	close_pipe_ends(int *prev_pipe, int *pipefd, int is_piped)
 		*prev_pipe = -1;
 }
 
+// Handles child process execution like redirections, command validation, execve
 static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipefd)
 {
 	char	*cmd_path;
@@ -63,6 +65,7 @@ static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipe
 	exit(126);
 }
 
+// Iterates over all commands, creates pipes and forks for each command
 static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 {
 	int	i;
@@ -93,6 +96,7 @@ static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 		close(prev_pipe);
 }
 
+// Main executor function that counts commands, allocates pids, waits for children
 void	execute_commands(t_command *cmd, t_program *minishell)
 {
 	t_command	*tmp;

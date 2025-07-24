@@ -12,11 +12,13 @@
 
 #include "minishell.h"
 
+// Returns true if the token is a word, env var, or wildcard
 static int	is_word_token(t_token_type type)
 {
 	return (type == TKN_WORD || type == TKN_ENV || type == TKN_WILDCARD);
 }
 
+// Checks if a redirection is followed by a valid word token like a filename
 static int	handle_redirection(t_token **current, t_program *minishell)
 {
 	if (!(*current)->next || !is_word_token((*current)->next->type))
@@ -28,6 +30,7 @@ static int	handle_redirection(t_token **current, t_program *minishell)
 	return (1);
 }
 
+// Processes a single token during parsing, checking syntax rules and updating state
 int	process_token(t_token **current, int *has_command, t_program *minishell)
 {
 	if (is_word_token((*current)->type))

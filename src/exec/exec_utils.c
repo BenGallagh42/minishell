@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+// Searches directories in path for the given command and returns its full path
 static char	*search_path_dirs(char *cmd, char **paths)
 {
 	char	*full_path;
@@ -33,6 +34,7 @@ static char	*search_path_dirs(char *cmd, char **paths)
 	return (NULL);
 }
 
+// Resolves the executable path for a command using the path environment variable
 char	*find_command_path(char *cmd, t_program *minishell)
 {
 	char	*path_env;

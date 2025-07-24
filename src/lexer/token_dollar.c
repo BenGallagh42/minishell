@@ -6,24 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 16:35:22 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/22 16:45:57 by bboulmie         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   token_dollar.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 16:35:22 by bboulmie          #+#    #+#             */
 /*   Updated: 2025/07/22 17:30:00 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+// Handles cases like $"..." inside a variable expression
 static void	handle_dollar_quotes(const char **input,
 	t_token **head, t_token **curr)
 {
@@ -41,6 +30,7 @@ static void	handle_dollar_quotes(const char **input,
 	add_token(head, curr, TKN_WORD, token);
 }
 
+// Handles special variable $? which stores the last exit code
 static void	handle_dollar_question(const char **input,
 	t_token **head, t_token **curr, t_program *minishell)
 {
@@ -53,6 +43,7 @@ static void	handle_dollar_question(const char **input,
 	add_token(head, curr, TKN_WORD, exit_status);
 }
 
+// Handles invalid or unsupported variable names after $
 static void	handle_invalid_var(const char **input,
 	t_token **head, t_token **curr)
 {
@@ -60,6 +51,7 @@ static void	handle_invalid_var(const char **input,
 	add_token(head, curr, TKN_WORD, ft_strdup(""));
 }
 
+// Expands variables starting with $, like $VAR, $?, $", or invalid names
 void	token_dollar(const char **input, t_token **head, t_token **curr,
 	t_program *minishell)
 {

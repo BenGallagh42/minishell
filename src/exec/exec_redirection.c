@@ -12,7 +12,8 @@
 
 #include "minishell.h"
 
-static void	generate_tmp_filename(char *buffer, int count) // New function to generate unique temp file names
+// Generates a unique temporary file name for heredoc using a count
+static void	generate_tmp_filename(char *buffer, int count)
 {
 	char	*base = "/tmp/minishell_heredoc_";
 	char	*num;
@@ -35,6 +36,7 @@ static void	generate_tmp_filename(char *buffer, int count) // New function to ge
 	buffer[i] = '\0';
 }
 
+// Handles output redirection by truncating/creating a file and redirecting stdout
 static void	handle_output_redir(t_redirection *redir)
 {
 	int	fd;
@@ -49,6 +51,7 @@ static void	handle_output_redir(t_redirection *redir)
 	close(fd);
 }
 
+// Handles append redirection by appending to/creating a file and redirecting stdout
 static void	handle_append_redir(t_redirection *redir)
 {
 	int	fd;
@@ -63,6 +66,7 @@ static void	handle_append_redir(t_redirection *redir)
 	close(fd);
 }
 
+// Handles input redirection by opening a file and redirecting stdin
 static void	handle_input_redir(t_redirection *redir)
 {
 	int	fd;
@@ -77,6 +81,7 @@ static void	handle_input_redir(t_redirection *redir)
 	close(fd);
 }
 
+// Handles heredoc redirection by writing content to a temp file and redirecting stdin
 static void	handle_heredoc_redir(t_redirection *redir, t_program *minishell)
 {
 	int		fd;
@@ -106,6 +111,7 @@ static void	handle_heredoc_redir(t_redirection *redir, t_program *minishell)
 	unlink(tmp_file);
 }
 
+// Iterates through and applies all redirections for a command
 void	handle_redirections(t_redirection *redirs, t_program *minishell)
 {
 	while (redirs)

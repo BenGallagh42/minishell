@@ -12,8 +12,10 @@
 
 #include "minishell.h"
 
+// Global flag to detect SIGINT during heredoc input
 volatile sig_atomic_t	g_sigint_flag = 0;
 
+// Signal handler to set flag when SIGINT is received like Ctrl+C
 void	heredoc_signal_handler(int sig)
 {
 	if (sig == SIGINT)
@@ -23,6 +25,7 @@ void	heredoc_signal_handler(int sig)
 	}
 }
 
+// Processes one line of heredoc input with optional variable expansion
 static void	process_heredoc_line(char **content, char *line, int expand, t_program *minishell)
 {
 	char	*to_append;
@@ -58,6 +61,7 @@ static void	process_heredoc_line(char **content, char *line, int expand, t_progr
 		free(to_append);
 }
 
+// Main loop that reads heredoc input line by line until the delimiter is matched
 int	heredoc_input_loop(const char *delimiter, t_program *minishell, int expand, char **content)
 {
 	char	*line;
@@ -86,6 +90,7 @@ int	heredoc_input_loop(const char *delimiter, t_program *minishell, int expand, 
 	return (0);
 }
 
+// Sets up signal handling and runs the heredoc input loop, returns the final content
 char	*setup_and_run_heredoc(const char *delimiter, t_program *minishell, int expand)
 {
 	char	*content;
@@ -104,6 +109,7 @@ char	*setup_and_run_heredoc(const char *delimiter, t_program *minishell, int exp
 	return (content);
 }
 
+// Wrapper function to initiate heredoc reading
 char	*read_heredoc(const char *delimiter, t_program *minishell, int expand)
 {
 	return (setup_and_run_heredoc(delimiter, minishell, expand));

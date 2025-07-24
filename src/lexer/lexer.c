@@ -12,6 +12,7 @@
 
 #include "../../inc/minishell.h"
 
+// Handles tokens starting with '$' by delegating to token_dollar()
 static void	handle_dollar_token(const char **input, t_token **head,
 	t_token **current, t_program *minishell)
 {
