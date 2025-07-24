@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 19:18:44 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 18:21:52 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 19:32:22 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,15 @@ void	print_file_error(int error_code, const char *token_value,
 	}
 }
 
-void	print_general_error(int error_code, t_program *minishell)
+void	print_general_error(int error_code, const char *token_value,
+		t_program *minishell)
 {
 	minishell->error_code = error_code;
 	if (error_code == ERR_NO_COMMAND)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		if (minishell->cmd_list && minishell->cmd_list->args[0])
-			ft_putstr_fd(minishell->cmd_list->args[0], STDERR_FILENO);
+		if (token_value)
+			ft_putstr_fd((char *)token_value, STDERR_FILENO);
 		else
 			ft_putstr_fd("", STDERR_FILENO);
 		ft_putendl_fd(": command not found", STDERR_FILENO);
@@ -77,5 +78,5 @@ void	print_error_message(int error_code, const char *token_value,
 		|| error_code == ERR_PERMISSION_DENIED)
 		print_file_error(error_code, token_value, minishell);
 	else
-		print_general_error(error_code, minishell);
+		print_general_error(error_code, token_value, minishell);
 }
