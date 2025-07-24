@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:01:07 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 15:15:51 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 15:17:48 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,17 @@ void	expand_single_variable(const char **str, char **result,
 	const char	*start;
 	char		*var_name;
 	char		*var_value;
+	char		*tmp;
 
 	(*str)++;
 	if (**str == '\0' || **str == ' ' || **str == '"' || **str == '\'')
 	{
-		*result = ft_strjoin_free(*result, ft_strdup("$"));
+		tmp = ft_strdup("$");
+		if (tmp)
+		{
+			*result = ft_strjoin_free(*result, tmp);
+			free(tmp); // Free the temporary string
+		}
 		return ;
 	}
 	if (**str == '?')
