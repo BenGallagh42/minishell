@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 19:53:08 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 20:12:18 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ static void	close_pipe_ends(int *prev_pipe, int *pipefd, int is_piped)
 
 static int	apply_redirections(t_redirection *redirs, t_program *mini)
 {
+	int	err_code;
+
 	while (redirs)
 	{
 		if (redirs->type == TKN_REDIR_OUT || redirs->type == TKN_REDIR_APPEND)
@@ -58,7 +60,10 @@ static int	apply_redirections(t_redirection *redirs, t_program *mini)
 				redirs->type == TKN_REDIR_OUT ? O_WRONLY | O_CREAT | O_TRUNC
 				: O_WRONLY | O_CREAT | O_APPEND, 0644);
 			if (fd == -1)
-				return (print_error_message(ERR_FILE_NOT_FOUND, redirs->target, mini), 0);
+			{
+				err_code = (errno == EACCES || errno == EISDIR) ? ERR_PERMISSION_DENIED : ERR_FILE_NOT_FOUND;
+				return (print_error_message(err_code, redirs->target, mini), 0);
+			}
 			dup2(fd, STDOUT_FILENO);
 			close(fd);
 		}
@@ -68,7 +73,10 @@ static int	apply_redirections(t_redirection *redirs, t_program *mini)
 				return (print_error_message(ERR_FILE_NOT_FOUND, NULL, mini), 0);
 			int fd = open(redirs->target, O_RDONLY);
 			if (fd == -1)
-				return (print_error_message(ERR_FILE_NOT_FOUND, redirs->target, mini), 0);
+			{
+				err_code = (errno == EACCES) ? ERR_PERMISSION_DENIED : ERR_FILE_NOT_FOUND;
+				return (print_error_message(err_code, redirs->target, mini), 0);
+			}
 			dup2(fd, STDIN_FILENO);
 			close(fd);
 		}
@@ -101,6 +109,7 @@ static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipe
 {
 	char	*cmd_path;
 
+	signal(SIGPIPE, SIG_IGN);
 	if (prev_pipe != -1)
 	{
 		dup2(prev_pipe, STDIN_FILENO);
@@ -148,6 +157,7 @@ static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 	int	pipefd[2];
 	int	stdout_backup;
 
+	signal(SIGPIPE, SIG_IGN);
 	i = -1;
 	prev_pipe = -1;
 	while (++i < count)

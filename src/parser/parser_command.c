@@ -6,15 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 19:48:49 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 20:04:03 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Processes word and wildcard tokens */
-static int	process_words(t_token **current,
-	t_list **args, t_program *minishell)
+static int	process_words(t_token **current, t_list **args, t_program *minishell)
 {
 	t_list	*expanded_list;
 	int		is_first_arg;
@@ -47,9 +45,7 @@ static int	process_words(t_token **current,
 	return (0);
 }
 
-/* Processes redirection tokens into redirection list */
-static int	process_redirs(t_token **current,
-	t_list **redirs, t_program *minishell)
+static int	process_redirs(t_token **current, t_list **redirs, t_program *minishell)
 {
 	t_redirection	*redir;
 	t_list			*new_node;
@@ -74,59 +70,31 @@ static int	process_redirs(t_token **current,
 	return (0);
 }
 
-/* Checks if command is echo and has input redirection */
-static int	has_input_redir(t_list *redirs)
-{
-    t_list	*tmp;
-
-    tmp = redirs;
-    while (tmp)
-    {
-        if (((t_redirection *)tmp->content)->type == TKN_REDIR_IN
-            || ((t_redirection *)tmp->content)->type == TKN_REDIR_HEREDOC)
-            return (1);
-        tmp = tmp->next;
-    }
-    return (0);
-}
-
-/* Processes tokens for the command, populating args and redirs lists */
 static int	process_command_tokens(t_token **current, t_list **args,
-        t_list **redirs, t_program *minishell)
+	t_list **redirs, t_program *minishell)
 {
-    int		has_words;
-
-    has_words = 0;
-    while (*current && (*current)->type != TKN_PIPE)
-    {
-        if (is_redirection_token((*current)->type))
-        {
-            if (process_redirs(current, redirs, minishell))
-            {
-                ft_lstclear(redirs, free_redirection);
-                return (1);
-            }
-        }
-        else
-        {
-            if (has_words && *args && ft_strcmp((*args)->content, "echo") == 0
-                && has_input_redir(*redirs))
-                *current = (*current)->next;
-            else
-            {
-                if (process_words(current, args, minishell))
-                {
-                    ft_lstclear(redirs, free_redirection);
-                    return (1);
-                }
-                has_words = 1;
-            }
-        }
-    }
-    return (0);
+	while (*current && (*current)->type != TKN_PIPE)
+	{
+		if (is_redirection_token((*current)->type))
+		{
+			if (process_redirs(current, redirs, minishell))
+			{
+				ft_lstclear(redirs, free_redirection);
+				return (1);
+			}
+		}
+		else
+		{
+			if (process_words(current, args, minishell))
+			{
+				ft_lstclear(redirs, free_redirection);
+				return (1);
+			}
+		}
+	}
+	return (0);
 }
 
-/* Finalizes the command by converting lists to arrays and performing checks */
 static t_command	*finalize_command(t_command *cmd, t_list *args, t_list *redirs)
 {
 	cmd->args = list_to_array(args);
@@ -149,7 +117,6 @@ static t_command	*finalize_command(t_command *cmd, t_list *args, t_list *redirs)
 	return (cmd);
 }
 
-/* Parses a simple command from tokens */
 t_command	*parse_simple_cmd(t_token **tokens, t_program *minishell)
 {
 	t_command	*cmd;
@@ -167,8 +134,8 @@ t_command	*parse_simple_cmd(t_token **tokens, t_program *minishell)
 		return (NULL);
 	}
 	cmd->args = NULL;
-    cmd->redirs = NULL;
-    cmd->next = NULL;
+	cmd->redirs = NULL;
+	cmd->next = NULL;
 	init_command(cmd);
 	if (process_command_tokens(&current, &args, &redirs, minishell))
 	{

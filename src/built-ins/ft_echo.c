@@ -6,13 +6,12 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 19:09:45 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/16 20:51:34 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 20:03:36 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Checks if argument is valid -n flag
 static int	is_valid_n_flag(const char *arg)
 {
 	size_t	i;
@@ -29,7 +28,6 @@ static int	is_valid_n_flag(const char *arg)
 	return (1);
 }
 
-// Prints echo arguments
 static void	echo_print(char **args, int start, int suppress_newline)
 {
 	int	i;
@@ -49,7 +47,6 @@ static void	echo_print(char **args, int start, int suppress_newline)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 }
 
-// Prints arguments with optional -n flag
 int	ft_echo(t_command *command)
 {
 	int	suppress_newline;
@@ -57,16 +54,14 @@ int	ft_echo(t_command *command)
 
 	i = 1;
 	suppress_newline = 0;
-	if (!command->args[i])
-	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		return (0);
-	}
 	while (command->args[i] && is_valid_n_flag(command->args[i]))
 	{
 		suppress_newline = 1;
 		i++;
 	}
-	echo_print(command->args, i, suppress_newline);
+	if (!command->args[i] && !suppress_newline)
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	else
+		echo_print(command->args, i, suppress_newline);
 	return (0);
 }
