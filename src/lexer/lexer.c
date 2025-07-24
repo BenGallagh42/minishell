@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 19:20:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 19:59:32 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/24 20:53:48 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,13 @@ static void	concatenate_quoted_string(const char **input, char **result,
 			ft_putchar_fd(quote, 2);
 			ft_putstr_fd("'\n", 2);
 			minishell->error_code = 2;
-			return;
+			return ;
 		}
 		tmp = ft_strndup(start, end - start + 1);
 		if (!tmp)
-			return;
+			return ;
 		*result = ft_strjoin_free(*result, tmp);
+		free(tmp);
 		*input = end + 1;
 	}
 }
