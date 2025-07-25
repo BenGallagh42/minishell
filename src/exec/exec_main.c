@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/25 11:06:14 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/25 11:16:49 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	generate_tmp_filename(char *buffer, int count)
 	}
 	num = ft_itoa(count);
 	if (!num)
-		return;
+		return ;
 	while (*num)
 	{
 		buffer[i] = *num++;
@@ -109,7 +109,9 @@ static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipe
 {
 	char	*cmd_path;
 
-	signal(SIGPIPE, SIG_IGN);
+	// Set default signal handling for child
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	if (prev_pipe != -1)
 	{
 		dup2(prev_pipe, STDIN_FILENO);
@@ -157,7 +159,6 @@ static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 	int	pipefd[2];
 	int	stdout_backup;
 
-	signal(SIGPIPE, SIG_IGN);
 	i = -1;
 	prev_pipe = -1;
 	while (++i < count)
@@ -200,7 +201,7 @@ void	execute_commands(t_command *cmd, t_program *minishell)
 	t_command	*tmp;
 	int			count;
 	pid_t		*pids;
-	int			status = 0;
+	int			status;
 	int			j;
 
 	count = 0;
@@ -214,6 +215,9 @@ void	execute_commands(t_command *cmd, t_program *minishell)
 		return ;
 	}
 	ft_memset(pids, 0, sizeof(pid_t) * count);
+	// Set signals for parent during execution
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN); // Will check SIGQUIT in waitpid
 	exec_loop(cmd, minishell, pids, count);
 	j = -1;
 	while (++j < count)
@@ -221,9 +225,14 @@ void	execute_commands(t_command *cmd, t_program *minishell)
 		if (pids[j] > 0)
 		{
 			waitpid(pids[j], &status, 0);
+			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
+				write(STDOUT_FILENO, "Quit\n", 5);
 			if (WIFEXITED(status))
 				minishell->error_code = WEXITSTATUS(status);
 		}
 	}
+	// Restore prompt signal handlers
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 	free(pids);
 }

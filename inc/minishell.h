@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 19:58:47 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/25 11:18:22 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,8 @@ typedef struct s_program
 void			init_shell(t_program *minishell, char **envp);
 void			run_shell(t_program *minishell);
 void			free_shell(t_program *minishell);
+void			sigquit_handler(int sig);
+void			sigint_handler(int sig);
 
 // Utils functions
 void			free_tokens(t_token *tokens);

@@ -6,11 +6,26 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 18:44:16 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 18:13:31 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/25 11:21:18 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	sigint_handler(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+void	sigquit_handler(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "Quit\n", 5);
+}
 
 void	init_shell(t_program *minishell, char **envp)
 {
@@ -34,9 +49,8 @@ void	init_shell(t_program *minishell, char **envp)
 	}
 	minishell->envp[i] = NULL;
 	minishell->error_code = 0;
-	signal(SIGINT, SIG_IGN);
+	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGPIPE, SIG_IGN);
 }
 
 void	run_shell(t_program *minishell)
@@ -49,9 +63,17 @@ void	run_shell(t_program *minishell)
 	{
 		input = readline("minishell> ");
 		if (!input)
+		{
+			write(STDOUT_FILENO, "exit\n", 5);
 			break ;
+		}
 		if (input && *input)
 			add_history(input);
+		else
+		{
+			free(input);
+			continue ;
+		}
 		tokens = main_lexer(input, minishell);
 		if (tokens)
 		{
