@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 19:18:44 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 19:32:22 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/25 11:03:09 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	print_pipe_error(t_program *minishell)
 void	print_file_error(int error_code, const char *token_value,
 		t_program *minishell)
 {
+	struct stat	sb;
+
 	minishell->error_code = error_code;
 	if (error_code == ERR_FILE_NOT_FOUND)
 	{
@@ -40,9 +42,18 @@ void	print_file_error(int error_code, const char *token_value,
 	}
 	else if (error_code == ERR_PERMISSION_DENIED)
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd((char *)token_value, STDERR_FILENO);
-		ft_putendl_fd(": Is a directory", STDERR_FILENO);
+		if (stat(token_value, &sb) == 0 && S_ISDIR(sb.st_mode))
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd((char *)token_value, STDERR_FILENO);
+			ft_putendl_fd(": Is a directory", STDERR_FILENO);
+		}
+		else
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd((char *)token_value, STDERR_FILENO);
+			ft_putendl_fd(": Permission denied", STDERR_FILENO);
+		}
 	}
 }
 
