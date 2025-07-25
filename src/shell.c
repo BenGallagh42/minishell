@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 18:44:16 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/25 11:21:18 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/25 12:34:27 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,30 +27,48 @@ void	sigquit_handler(int sig)
 	write(STDOUT_FILENO, "Quit\n", 5);
 }
 
-void	init_shell(t_program *minishell, char **envp)
+void init_shell(t_program *minishell, char **envp)
 {
-	int	i;
-	int	j;
+    int i;
+    int j;
+    char *shlvl_value;
+    int shlvl;
 
-	i = 0;
-	j = 0;
-	while (envp[i])
-		i++;
-	minishell->envp = malloc(sizeof(char *) * (i + 1));
-	if (!minishell->envp)
-	{
-		ft_putstr_fd("minishell: memory allocation failed\n", STDERR_FILENO);
-		exit(1);
-	}
-	while (j < i)
-	{
-		minishell->envp[j] = ft_strdup(envp[j]);
-		j++;
-	}
-	minishell->envp[i] = NULL;
-	minishell->error_code = 0;
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+    i = 0;
+    j = 0;
+    while (envp[i])
+        i++;
+    minishell->envp = malloc(sizeof(char *) * (i + 1));
+    if (!minishell->envp)
+    {
+        ft_putstr_fd("minishell: memory allocation failed\n", STDERR_FILENO);
+        exit(1);
+    }
+    while (j < i)
+    {
+        minishell->envp[j] = ft_strdup(envp[j]);
+        j++;
+    }
+    minishell->envp[i] = NULL;
+    minishell->error_code = 0;
+
+    // Handle SHLVL
+    shlvl_value = ft_getenv("SHLVL", minishell->envp);
+    if (shlvl_value)
+        shlvl = ft_atoi(shlvl_value) + 1;
+    else
+        shlvl = 1; // If SHLVL is not set, start at 1
+    shlvl_value = ft_itoa(shlvl);
+    if (!shlvl_value)
+    {
+        ft_putstr_fd("minishell: memory allocation failed\n", STDERR_FILENO);
+        exit(1);
+    }
+    ft_setenv("SHLVL", shlvl_value, minishell);
+    free(shlvl_value);
+
+    signal(SIGINT, sigint_handler);
+    signal(SIGQUIT, SIG_IGN);
 }
 
 void	run_shell(t_program *minishell)
