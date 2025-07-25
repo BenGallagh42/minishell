@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/25 11:18:22 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/25 19:39:51 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,9 @@ char			*remove_quotes(const char *str);
 char			*ft_getenv(const char *name, char **envp);
 t_list			*expand_wildcard(const char *pattern, t_program *minishell);
 t_list			*get_expanded_list(t_token *token, t_program *minishell);
+char			*handle_word_token(t_token *token, t_program *minishell);
+char			*handle_tilde_expansion(const char *value,
+					t_program *minishell);
 void			append_expanded(t_list **args, t_list *to_add);
 
 // Utility Functions

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command_helpers.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 17:00:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 18:46:31 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/25 20:07:37 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,9 @@ int	validate_file_arg(const char *arg, t_program *minishell)
 }
 
 // Expands a single token and returns a list containing the expanded result
-t_list *get_expanded_list(t_token *token, t_program *minishell)
+t_list	*get_expanded_list(t_token *token, t_program *minishell)
 {
 	char	*expanded;
-	char	*home;
 
 	if (token->type == TKN_WILDCARD)
 		return (expand_wildcard(token->value, minishell));
@@ -59,24 +58,7 @@ t_list *get_expanded_list(t_token *token, t_program *minishell)
 	}
 	if (token->type == TKN_WORD)
 	{
-		if (minishell->cmd_list && minishell->cmd_list->args
-			&& ft_strcmp(minishell->cmd_list->args[0], "echo") == 0)
-			expanded = ft_strdup(token->value);
-		else if (token->value[0] == '~' && (token->value[1] == '\0' || token->value[1] == '/'))
-		{
-			home = ft_getenv("HOME", minishell->envp);
-			if (!home)
-			{
-				print_error_message(ERR_NO_COMMAND, "HOME not set", minishell);
-				return (NULL);
-			}
-			if (token->value[1] == '\0')
-				expanded = ft_strdup(home);
-			else
-				expanded = ft_strjoin(home, token->value + 1);
-		}
-		else
-			expanded = expand_and_remove_quotes(token->value, minishell);
+		expanded = handle_word_token(token, minishell);
 		if (expanded)
 			return (ft_lstnew(expanded));
 	}

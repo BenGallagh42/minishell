@@ -29,6 +29,7 @@ LEXER_SRC = $(LEXER_DIR)/lexer.c \
 PARSER_SRC = $(PARSER_DIR)/parser.c \
              $(PARSER_DIR)/parser_command.c \
 			 $(PARSER_DIR)/parser_command_helpers.c \
+			 $(PARSER_DIR)/parser_command_helpers2.c \
              $(PARSER_DIR)/parser_redir.c \
              $(PARSER_DIR)/parser_redir_helpers.c \
              $(PARSER_DIR)/parser_heredoc.c \
