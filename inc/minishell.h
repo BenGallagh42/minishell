@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 20:20:51 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/26 21:34:23 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,6 +223,7 @@ void			free_lists(t_list **args, t_list **redirs);
 //EXECUTION FUNCTIONS
 void			execute_commands(t_command *cmd, t_program *minishell);
 void			execute_builtin(t_command *cmd, t_program *minishell);
+void			generate_tmp_filename(char *buffer, int count);
 
 // BUILT_IN FUNCTIONS
 //ft_export
