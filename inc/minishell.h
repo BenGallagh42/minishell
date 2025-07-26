@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 23:50:39 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/27 01:26:27 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -244,6 +244,11 @@ void			setup_child_signals(void);
 void			validate_and_exec_command(t_command *cmd, t_program *mini);
 void			setup_pipes(int prev_pipe, int *pipefd, int is_piped);
 void			handle_missing_args_and_exit(t_command *cmd, t_program *mini);
+int				handle_single_builtin(t_command *cmd, t_program *mini);
+int				setup_pipe_and_fork(t_command *cmd, t_program *mini,
+					int *pipefd, pid_t *pid);
+int				apply_redirections(t_redirection *redirs, t_program *mini);
+
 
 // BUILT_IN FUNCTIONS
 //ft_export
