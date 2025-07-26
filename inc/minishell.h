@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/27 01:26:27 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/27 02:06:37 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,9 @@ int				handle_single_builtin(t_command *cmd, t_program *mini);
 int				setup_pipe_and_fork(t_command *cmd, t_program *mini,
 					int *pipefd, pid_t *pid);
 int				apply_redirections(t_redirection *redirs, t_program *mini);
-
+int				count_commands(t_command *cmd);
+pid_t			*init_pid_array(int count, t_program *mini);
+void			handle_child_signals(pid_t *pids, int count, t_program *mini);
 
 // BUILT_IN FUNCTIONS
 //ft_export

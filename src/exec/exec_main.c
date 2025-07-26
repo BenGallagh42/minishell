@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/27 01:25:34 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/27 02:06:00 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,45 +83,24 @@ void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 		close(prev_pipe);
 }
 
-void	execute_commands(t_command *cmd, t_program *minishell)
+void	execute_commands(t_command *cmd, t_program *mini)
 {
-	t_command	*tmp;
-	int			count;
-	pid_t		*pids;
-	int			status;
-	int			j;
+	int		count;
+	pid_t	*pids;
 
-	count = 0;
-	tmp = cmd;
-	while (tmp && ++count)
-		tmp = tmp->next;
+	count = count_commands(cmd);
 	if (count == 1 && cmd->is_builtin)
 	{
-		exec_loop(cmd, minishell, NULL, count);
+		exec_loop(cmd, mini, NULL, count);
 		return ;
 	}
-	pids = malloc(sizeof(pid_t) * count);
+	pids = init_pid_array(count, mini);
 	if (!pids)
-	{
-		print_error_message(ERR_MEMORY, NULL, minishell);
 		return ;
-	}
-	ft_memset(pids, 0, sizeof(pid_t) * count);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	exec_loop(cmd, minishell, pids, count);
-	j = -1;
-	while (++j < count)
-	{
-		if (pids[j] > 0)
-		{
-			waitpid(pids[j], &status, 0);
-			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
-				write(STDOUT_FILENO, "Quit\n", 5);
-			if (WIFEXITED(status))
-				minishell->error_code = WEXITSTATUS(status);
-		}
-	}
+	exec_loop(cmd, mini, pids, count);
+	handle_child_signals(pids, count, mini);
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 	free(pids);
