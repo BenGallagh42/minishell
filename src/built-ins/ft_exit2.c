@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 09:35:03 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/21 20:12:07 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/27 04:00:29 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,12 @@ long long	ft_atoll(const char *str)
 	{
 		if (result > LLONG_MAX / 10
 			|| (result == LLONG_MAX / 10 && (str[i] - '0') > LLONG_MAX % 10))
-			return (sign == 1 ? LLONG_MAX : LLONG_MIN);
+		{
+			if (sign == 1)
+				return (LLONG_MAX);
+			else
+				return (LLONG_MIN);
+		}
 		result = result * 10 + (str[i] - '0');
 		i++;
 	}

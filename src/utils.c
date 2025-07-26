@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 17:05:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/22 16:20:44 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/27 04:24:35 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,36 @@ void	print_redirections(t_redirection *redirs)
 	}
 }
 
+static void	print_single_command(t_command *cmd, int cmd_num)
+{
+	int	i;
+
+	printf("  Command %d:\n", cmd_num);
+	if (cmd->args)
+	{
+		printf("    Arguments: ");
+		i = 0;
+		while (cmd->args[i])
+		{
+			printf("%s ", cmd->args[i]);
+			i++;
+		}
+		printf("\n");
+	}
+	if (cmd->redirs)
+	{
+		printf("    Redirections:\n");
+		print_redirections(cmd->redirs);
+	}
+	printf("    Is Piped: %d\n", cmd->is_piped);
+	printf("    Is Background: %d\n", cmd->is_background);
+	printf("    Is Builtin: %d\n", cmd->is_builtin);
+}
+
 void	print_commands(t_command *cmd_list)
 {
 	t_command	*current;
 	int			cmd_num;
-	int			i;
 
 	current = cmd_list;
 	cmd_num = 1;
@@ -90,26 +115,7 @@ void	print_commands(t_command *cmd_list)
 	printf("Parser Output:\n");
 	while (current)
 	{
-		printf("  Command %d:\n", cmd_num++);
-		if (current->args)
-		{
-			printf("    Arguments: ");
-			i = 0;
-			while (current->args[i])
-			{
-				printf("%s ", current->args[i]);
-				i++;
-			}
-			printf("\n");
-		}
-		if (current->redirs)
-		{
-			printf("    Redirections:\n");
-			print_redirections(current->redirs);
-		}
-		printf("    Is Piped: %d\n", current->is_piped);
-		printf("    Is Background: %d\n", current->is_background);
-		printf("    Is Builtin: %d\n", current->is_builtin);
+		print_single_command(current, cmd_num++);
 		current = current->next;
 	}
 }
