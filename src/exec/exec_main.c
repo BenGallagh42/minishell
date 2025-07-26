@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/25 12:45:52 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/26 20:49:53 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 static void	generate_tmp_filename(char *buffer, int count)
 {
-	char	*base = "/tmp/minishell_heredoc_";
+	char	*base;
 	char	*num;
 	int		i;
 
+	base = "/tmp/minishell_heredoc_";
 	i = 0;
 	while (base[i])
 	{

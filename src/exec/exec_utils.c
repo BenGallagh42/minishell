@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 19:50:39 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/25 11:06:02 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/26 20:53:10 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,43 +33,58 @@ static char	*search_path_dirs(char *cmd, char **paths)
 	return (NULL);
 }
 
-char	*find_command_path(char *cmd, t_program *minishell)
+static char	*is_valid_absolute_path(char *cmd, t_program *minishell)
 {
-	char		*path_env;
-	char		**paths;
 	struct stat	sb;
 
-	if (!cmd || !*cmd)
-		return (NULL);
-	if (ft_strchr(cmd, '/'))
+	if (stat(cmd, &sb) == 0)
 	{
-		if (stat(cmd, &sb) == 0)
+		if (S_ISDIR(sb.st_mode))
 		{
-			if (S_ISDIR(sb.st_mode))
-			{
-				minishell->error_code = ERR_PERMISSION_DENIED;
-				return (NULL);
-			}
-			if (access(cmd, X_OK) == 0)
-				return (ft_strdup(cmd));
+			minishell->error_code = ERR_PERMISSION_DENIED;
+			return (NULL);
 		}
-		minishell->error_code = ERR_FILE_NOT_FOUND;
-		return (NULL);
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
 	}
-	path_env = ft_getenv("PATH", minishell->envp);
-	if (!path_env)
-	{
-		minishell->error_code = ERR_NO_COMMAND;
-		return (NULL);
-	}
+	minishell->error_code = ERR_FILE_NOT_FOUND;
+	return (NULL);
+}
+
+static char	*handle_null_path_env(t_program *minishell)
+{
+	minishell->error_code = ERR_NO_COMMAND;
+	return (NULL);
+}
+
+static char	*handle_split_and_search(char *cmd, char *path_env,
+	t_program *minishell)
+{
+	char	**paths;
+	char	*found_path;
+
 	paths = ft_split(path_env, ':');
 	if (!paths)
 	{
 		minishell->error_code = ERR_MEMORY;
 		return (NULL);
 	}
-	path_env = search_path_dirs(cmd, paths);
-	if (!path_env)
+	found_path = search_path_dirs(cmd, paths);
+	if (!found_path)
 		minishell->error_code = ERR_NO_COMMAND;
-	return (path_env);
+	return (found_path);
+}
+
+char	*find_command_path(char *cmd, t_program *minishell)
+{
+	char	*path_env;
+
+	if (!cmd || !*cmd)
+		return (NULL);
+	if (ft_strchr(cmd, '/'))
+		return (is_valid_absolute_path(cmd, minishell));
+	path_env = ft_getenv("PATH", minishell->envp);
+	if (!path_env)
+		return (handle_null_path_env(minishell));
+	return (handle_split_and_search(cmd, path_env, minishell));
 }
