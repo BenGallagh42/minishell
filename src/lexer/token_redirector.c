@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirector.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:38:25 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/23 18:04:12 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/27 03:04:46 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ static void	print_error(char redirector, char next_char, int count)
 	if (count > 2)
 	{
 		if (redirector == '<')
-			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+			ft_printf("minishell: syntax error near unexpected token "
+				"`newline'\n");
 		else
 			ft_printf("minishell: syntax error near unexpected token `>'\n");
 	}
@@ -25,7 +26,8 @@ static void	print_error(char redirector, char next_char, int count)
 		|| (redirector == '>' && next_char == '<'))
 	{
 		if (redirector == '<')
-			ft_printf("minishell: syntax error near unexpected token `newline'\n");
+			ft_printf("minishell: syntax error near unexpected token "
+				"`newline'\n");
 		else
 			ft_printf("minishell: syntax error near unexpected token `<'\n");
 	}

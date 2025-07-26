@@ -20,6 +20,7 @@ OBJ_DIR = obj
 LEXER_SRC = $(LEXER_DIR)/lexer.c \
             $(LEXER_DIR)/lexer_utils.c \
             $(LEXER_DIR)/token_dollar.c \
+			$(LEXER_DIR)/token_dollar_utils.c \
             $(LEXER_DIR)/token_operator.c \
             $(LEXER_DIR)/token_quotes.c \
             $(LEXER_DIR)/token_redirector.c \
