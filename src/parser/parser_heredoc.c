@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:01:32 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 22:02:43 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/26 19:45:25 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,42 +23,31 @@ void	heredoc_signal_handler(int sig)
 	}
 }
 
-static void	process_heredoc_line(char **content, char *line, int expand, t_program *minishell)
+static void	process_heredoc_line(char **content, char *line,
+	int expand, t_program *minishell)
 {
 	char	*to_append;
 
 	if (expand)
 	{
-		to_append = expand_and_remove_quotes(line, minishell);
+		to_append = expand_heredoc_line(line, minishell);
 		if (!to_append)
 		{
-			minishell->error_code = ERR_MEMORY; // Set error code on expansion failure
-			return;
+			minishell->error_code = ERR_MEMORY;
+			return ;
 		}
 	}
 	else
 		to_append = line;
-	*content = ft_strjoin_free(*content, to_append);
-	if (!*content)
-	{
-		minishell->error_code = ERR_MEMORY; // Set error code on join failure
-		if (expand)
-			free(to_append);
-		return;
-	}
-	*content = ft_strjoin_free(*content, "\n");
-	if (!*content)
-	{
-		minishell->error_code = ERR_MEMORY; // Set error code on newline join failure
-		if (expand)
-			free(to_append);
-		return;
-	}
+	if (append_line_to_content(content, to_append, expand, minishell))
+		return ;
 	if (expand)
 		free(to_append);
 }
 
-int	heredoc_input_loop(const char *delimiter, t_program *minishell, int expand, char **content)
+
+int	heredoc_input_loop(const char *delimiter,
+	t_program *minishell, int expand, char **content)
 {
 	char	*line;
 
@@ -86,7 +75,8 @@ int	heredoc_input_loop(const char *delimiter, t_program *minishell, int expand, 
 	return (0);
 }
 
-char	*setup_and_run_heredoc(const char *delimiter, t_program *minishell, int expand)
+char	*setup_and_run_heredoc(const char *delimiter,
+	t_program *minishell, int expand)
 {
 	char	*content;
 	void	(*old_handler)(int);

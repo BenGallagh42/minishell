@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redir_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 19:30:37 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 21:51:25 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/26 19:45:41 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 /* Handles heredoc by reading input until delimiter */
-int	handle_heredoc(t_redirection *redir, const char *delim, t_program *minishell)
+int	handle_heredoc(t_redirection *redir, const char *delim,
+	t_program *minishell)
 {
 	int		expand;
 	char	*expanded;
@@ -37,4 +38,36 @@ int	handle_heredoc(t_redirection *redir, const char *delim, t_program *minishell
 	if (!redir->content)
 		return (free(redir->target), 0);
 	return (1);
+}
+
+char	*expand_heredoc_line(char *line, t_program *minishell)
+{
+	char	*to_append;
+
+	to_append = expand_and_remove_quotes(line, minishell);
+	if (!to_append)
+		minishell->error_code = ERR_MEMORY;
+	return (to_append);
+}
+
+int	append_line_to_content(char **content, char *line,
+	int should_free, t_program *minishell)
+{
+	*content = ft_strjoin_free(*content, line);
+	if (!*content)
+	{
+		minishell->error_code = ERR_MEMORY;
+		if (should_free)
+			free(line);
+		return (1);
+	}
+	*content = ft_strjoin_free(*content, "\n");
+	if (!*content)
+	{
+		minishell->error_code = ERR_MEMORY;
+		if (should_free)
+			free(line);
+		return (1);
+	}
+	return (0);
 }

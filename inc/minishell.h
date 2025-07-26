@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 19:13:19 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/26 19:40:10 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,9 @@ int				validate_redir_target(t_redirection *redir,
 char			*read_heredoc(const char *delimiter, t_program *minishell,
 					int expand);
 t_redirection	*list_to_redir_array(t_list *list);
+char			*expand_heredoc_line(char *line, t_program *minishell);
+int				append_line_to_content(char **content, char *line,
+					int should_free, t_program *minishell);
 
 // Expansion and Variable Handling
 // Expand variables, wildcards, and remove quotes
