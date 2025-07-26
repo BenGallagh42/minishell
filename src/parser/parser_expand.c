@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_expand.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:02:13 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/03 20:04:25 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/26 19:27:06 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,8 @@ char	*expand_and_remove_quotes(const char *str, t_program *minishell)
 	{
 		if (!process_next_token(&ptr, &result, minishell))
 		{
-			print_error_message(ERR_SYNTAX_TOKEN, "unbalanced quotes", minishell);
+			print_error_message(ERR_SYNTAX_TOKEN,
+				"unbalanced quotes", minishell);
 			free(result);
 			return (NULL);
 		}

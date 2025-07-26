@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/25 19:39:51 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/26 19:13:19 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,15 @@ int				has_token_errors(t_token *tokens);
 t_command		*main_parser(t_token *tokens, t_program *minishell);
 t_command		*parse_pipeline(t_token **tokens, t_program *minishell);
 t_command		*parse_simple_cmd(t_token **tokens, t_program *minishell);
+
+// Parser Helpers
+t_command		*init_cmd_and_set_defaults(t_program *minishell);
+t_command		*handle_parse_failure_cleanup(t_command *cmd,
+					t_list *args, t_list *redirs);
+int				handle_file_validation(t_token *token,
+					t_list **args, t_program *minishell);
+int				handle_expansion_and_append(t_token *token,
+					t_list **args, t_program *minishell);
 
 // Redirection Handling
 // Manage redirections, heredocs, and validation

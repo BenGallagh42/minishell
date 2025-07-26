@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_errors_handling.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 19:18:44 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/25 11:03:09 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/26 19:26:35 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	print_syntax_error(const char *token_value, t_program *minishell)
 	minishell->error_code = 2;
 	if (!token_value)
 		token_value = "newline";
-	ft_putstr_fd("minishell: syntax error near unexpected token `", STDERR_FILENO);
+	ft_putstr_fd("minishell: syntax error near unexpected token `",
+		STDERR_FILENO);
 	ft_putstr_fd((char *)token_value, STDERR_FILENO);
 	ft_putendl_fd("'", STDERR_FILENO);
 }
@@ -25,7 +26,8 @@ void	print_syntax_error(const char *token_value, t_program *minishell)
 void	print_pipe_error(t_program *minishell)
 {
 	minishell->error_code = 2;
-	ft_putendl_fd("minishell: syntax error near unexpected token `|'", STDERR_FILENO);
+	ft_putendl_fd("minishell: syntax error near unexpected token `|'",
+		STDERR_FILENO);
 }
 
 void	print_file_error(int error_code, const char *token_value,

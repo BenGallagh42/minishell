@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 20:04:03 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/26 19:13:08 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	process_words(t_token **current, t_list **args, t_program *minishell)
+static int	process_words(t_token **current,
+	t_list **args, t_program *minishell)
 {
-	t_list	*expanded_list;
 	int		is_first_arg;
 
 	is_first_arg = 1;
@@ -24,28 +24,22 @@ static int	process_words(t_token **current, t_list **args, t_program *minishell)
 		if ((*current)->type == TKN_WORD
 			&& !is_first_arg && needs_file_validation((*args)->content))
 		{
-			if (ft_strchr((*current)->value, '/')
-				&& !validate_file_arg((*current)->value, minishell))
+			if (handle_file_validation(*current, args, minishell))
 			{
-				ft_lstclear(args, free);
 				*current = (*current)->next;
 				return (1);
 			}
 		}
-		expanded_list = get_expanded_list(*current, minishell);
-		if (!expanded_list)
-		{
-			ft_lstclear(args, free);
+		if (handle_expansion_and_append(*current, args, minishell))
 			return (1);
-		}
-		append_expanded(args, expanded_list);
 		is_first_arg = 0;
 		*current = (*current)->next;
 	}
 	return (0);
 }
 
-static int	process_redirs(t_token **current, t_list **redirs, t_program *minishell)
+static int	process_redirs(t_token **current,
+	t_list **redirs, t_program *minishell)
 {
 	t_redirection	*redir;
 	t_list			*new_node;
@@ -95,7 +89,8 @@ static int	process_command_tokens(t_token **current, t_list **args,
 	return (0);
 }
 
-static t_command	*finalize_command(t_command *cmd, t_list *args, t_list *redirs)
+static t_command	*finalize_command(t_command *cmd,
+	t_list *args, t_list *redirs)
 {
 	cmd->args = list_to_array(args);
 	if (!cmd->args || cmd->args[0] == NULL)
@@ -127,21 +122,11 @@ t_command	*parse_simple_cmd(t_token **tokens, t_program *minishell)
 	args = NULL;
 	redirs = NULL;
 	current = *tokens;
-	cmd = malloc(sizeof(t_command));
+	cmd = init_cmd_and_set_defaults(minishell);
 	if (!cmd)
-	{
-		print_error_message(ERR_MEMORY, NULL, minishell);
 		return (NULL);
-	}
-	cmd->args = NULL;
-	cmd->redirs = NULL;
-	cmd->next = NULL;
-	init_command(cmd);
 	if (process_command_tokens(&current, &args, &redirs, minishell))
-	{
-		free_cmd(cmd, args, redirs);
-		return (NULL);
-	}
+		return (handle_parse_failure_cleanup(cmd, args, redirs));
 	*tokens = current;
 	cmd = finalize_command(cmd, args, redirs);
 	if (!cmd)
