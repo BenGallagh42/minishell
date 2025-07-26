@@ -48,7 +48,9 @@ PARSER_SRC = $(PARSER_DIR)/parser.c \
 EXEC_SRC =	$(EXEC_DIR)/exec_main.c \
 			$(EXEC_DIR)/exec_builtin.c \
 			$(EXEC_DIR)/exec_utils.c \
-			$(EXEC_DIR)/exec_utils2.c 
+			$(EXEC_DIR)/exec_utils2.c \
+			$(EXEC_DIR)/exec_utils3.c \
+			$(EXEC_DIR)/exec_utils4.c 
 
 BUILTINS_SRC =	$(BUILTINS_DIR)/ft_echo.c \
 				$(BUILTINS_DIR)/ft_pwd.c \

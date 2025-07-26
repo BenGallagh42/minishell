@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 22:42:54 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/27 00:32:32 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,54 +36,24 @@ static int	apply_redirections(t_redirection *redirs, t_program *mini)
 	return (process_redirection_list(redirs, mini, &ctx));
 }
 
-static void	exec_child(t_command *cmd, t_program *mini,
+void	exec_child(t_command *cmd, t_program *mini,
 	int prev_pipe, int *pipefd)
 {
-	char	*cmd_path;
-
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	setup_child_signals();
 	if (prev_pipe != -1)
 	{
 		dup2(prev_pipe, STDIN_FILENO);
 		close(prev_pipe);
 	}
-	if (cmd->is_piped)
-	{
-		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[1]);
-	}
+	setup_pipes(prev_pipe, pipefd, cmd->is_piped);
 	if (!apply_redirections(cmd->redirs, mini))
 	{
 		free_command(cmd);
 		exit(1);
 	}
 	if (!cmd->args || !cmd->args[0] || !ft_strlen(cmd->args[0]))
-	{
-		mini->error_code = ERR_NO_COMMAND;
-		if (cmd->args)
-			print_error_message(mini->error_code, cmd->args[0], mini);
-		else
-			print_error_message(mini->error_code, "", mini);
-		free_command(cmd);
-		exit(127);
-	}
-	cmd_path = find_command_path(cmd->args[0], mini);
-	if (!cmd_path)
-	{
-		print_error_message(mini->error_code, cmd->args[0], mini);
-		free_command(cmd);
-		if (mini->error_code == ERR_PERMISSION_DENIED)
-			exit(126);
-		exit(127);
-	}
-	execve(cmd_path, cmd->args, mini->envp);
-	mini->error_code = ERR_NO_COMMAND;
-	print_error_message(mini->error_code, cmd->args[0], mini);
-	free(cmd_path);
-	free_command(cmd);
-	exit(127);
+		handle_missing_args_and_exit(cmd, mini);
+	validate_and_exec_command(cmd, mini);
 }
 
 static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)

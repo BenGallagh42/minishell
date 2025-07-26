@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 22:43:48 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/26 23:50:39 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,6 +240,10 @@ int				handle_heredoc_redirection(t_redirection *redir,
 					t_program *mini, t_heredoc_ctx *ctx);
 int				process_redirection_list(t_redirection *redirs,
 					t_program *mini, t_heredoc_ctx *ctx);
+void			setup_child_signals(void);
+void			validate_and_exec_command(t_command *cmd, t_program *mini);
+void			setup_pipes(int prev_pipe, int *pipefd, int is_piped);
+void			handle_missing_args_and_exit(t_command *cmd, t_program *mini);
 
 // BUILT_IN FUNCTIONS
 //ft_export
