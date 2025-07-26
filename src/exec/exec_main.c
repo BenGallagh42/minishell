@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 22:00:21 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/26 22:42:54 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,72 +27,17 @@ static void	close_pipe_ends(int *prev_pipe, int *pipefd, int is_piped)
 
 static int	apply_redirections(t_redirection *redirs, t_program *mini)
 {
-	int			err_code;
-	int			fd;
-	char		tmp_file[32];
-	static int	heredoc_count;
+	int				fd;
+	static int		heredoc_count;
+	t_heredoc_ctx	ctx;
 
-	while (redirs)
-	{
-		if (redirs->type == TKN_REDIR_OUT || redirs->type == TKN_REDIR_APPEND)
-		{
-			if (redirs->type == TKN_REDIR_OUT)
-				fd = open(redirs->target, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			else
-				fd = open(redirs->target, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (fd == -1)
-			{
-				if (errno == EACCES || errno == EISDIR)
-					err_code = ERR_PERMISSION_DENIED;
-				else
-					err_code = ERR_FILE_NOT_FOUND;
-				return (print_error_message(err_code, redirs->target, mini), 0);
-			}
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-		}
-		else if (redirs->type == TKN_REDIR_IN)
-		{
-			if (!redirs->target || !*redirs->target)
-				return (print_error_message(ERR_FILE_NOT_FOUND, NULL, mini), 0);
-			fd = open(redirs->target, O_RDONLY);
-			if (fd == -1)
-			{
-				if (errno == EACCES)
-					err_code = ERR_PERMISSION_DENIED;
-				else
-					err_code = ERR_FILE_NOT_FOUND;
-				return (print_error_message(err_code, redirs->target, mini), 0);
-			}
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-		}
-		else if (redirs->type == TKN_REDIR_HEREDOC)
-		{
-			generate_tmp_filename(tmp_file, heredoc_count++);
-			fd = open(tmp_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (fd == -1)
-				return (print_error_message(ERR_FILE_NOT_FOUND, "heredoc",
-						mini), 0);
-			write(fd, redirs->content, ft_strlen(redirs->content));
-			close(fd);
-			fd = open(tmp_file, O_RDONLY);
-			if (fd == -1)
-			{
-				unlink(tmp_file);
-				return (print_error_message(ERR_FILE_NOT_FOUND,
-						"heredoc", mini), 0);
-			}
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-			unlink(tmp_file);
-		}
-		redirs = redirs->next;
-	}
-	return (1);
+	ctx.fd = &fd;
+	ctx.heredoc_count = &heredoc_count;
+	return (process_redirection_list(redirs, mini, &ctx));
 }
 
-static void	exec_child(t_command *cmd, t_program *mini, int prev_pipe, int *pipefd)
+static void	exec_child(t_command *cmd, t_program *mini,
+	int prev_pipe, int *pipefd)
 {
 	char	*cmd_path;
 
@@ -194,7 +139,7 @@ static void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 		close(prev_pipe);
 }
 
-void execute_commands(t_command *cmd, t_program *minishell)
+void	execute_commands(t_command *cmd, t_program *minishell)
 {
 	t_command	*tmp;
 	int			count;

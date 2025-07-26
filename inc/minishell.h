@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 21:34:23 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/26 22:43:48 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,14 @@ enum e_error_code
 	ERR_FORK,
 	ERR_PIPE
 };
+
+//EXECUTION: Redirection and program structs
+typedef struct s_heredoc_ctx
+{
+	char	tmp_file[32];
+	int		*fd;
+	int		*heredoc_count;
+}	t_heredoc_ctx;
 
 // MINISHELL: Main program struct
 typedef struct s_program
@@ -224,6 +232,14 @@ void			free_lists(t_list **args, t_list **redirs);
 void			execute_commands(t_command *cmd, t_program *minishell);
 void			execute_builtin(t_command *cmd, t_program *minishell);
 void			generate_tmp_filename(char *buffer, int count);
+int				handle_output_redirection(t_redirection *redir,
+					t_program *mini, int *fd);
+int				handle_input_redirection(t_redirection *redir,
+					t_program *mini, int *fd);
+int				handle_heredoc_redirection(t_redirection *redir,
+					t_program *mini, t_heredoc_ctx *ctx);
+int				process_redirection_list(t_redirection *redirs,
+					t_program *mini, t_heredoc_ctx *ctx);
 
 // BUILT_IN FUNCTIONS
 //ft_export
