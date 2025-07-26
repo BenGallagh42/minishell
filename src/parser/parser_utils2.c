@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:01:07 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 15:17:48 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/26 20:17:45 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,51 +25,15 @@ void	*free_array_partial(char **array, size_t i)
 void	expand_single_variable(const char **str, char **result,
 	t_program *minishell)
 {
-	const char	*start;
-	char		*var_name;
-	char		*var_value;
-	char		*tmp;
+	char	*var_name;
 
 	(*str)++;
-	if (**str == '\0' || **str == ' ' || **str == '"' || **str == '\'')
-	{
-		tmp = ft_strdup("$");
-		if (tmp)
-		{
-			*result = ft_strjoin_free(*result, tmp);
-			free(tmp); // Free the temporary string
-		}
+	if (is_special_dollar_case(str, result))
 		return ;
-	}
-	if (**str == '?')
-	{
-		var_name = ft_strdup("?");
-		(*str)++;
-	}
-	else
-	{
-		start = *str;
-		while (ft_isalnum(**str) || **str == '_')
-			(*str)++;
-		var_name = ft_substr(start, 0, *str - start);
-	}
+	var_name = get_variable_name(str);
 	if (!var_name)
 		return ;
-	if (ft_strcmp(var_name, "?") == 0)
-	{
-		var_value = ft_itoa(minishell->error_code);
-		if (var_value)
-		{
-			*result = ft_strjoin_free(*result, var_value);
-			free(var_value);
-		}
-	}
-	else
-	{
-		var_value = ft_getenv(var_name, minishell->envp);
-		if (var_value)
-			*result = ft_strjoin_free(*result, var_value);
-	}
+	expand_and_append_value(var_name, result, minishell);
 	free(var_name);
 }
 

@@ -44,7 +44,7 @@ static int	preliminary_checks(t_token *tokens, t_program *minishell)
 	int		has_non_empty;
 
 	if (!tokens)
-		return (1); // Silently return for empty input
+		return (1);
 	current = tokens;
 	has_non_empty = 0;
 	while (current)
@@ -54,7 +54,7 @@ static int	preliminary_checks(t_token *tokens, t_program *minishell)
 		current = current->next;
 	}
 	if (!has_non_empty)
-		return (1); // Silently return for all empty tokens
+		return (1);
 	if (has_token_errors(tokens))
 	{
 		print_error_message(ERR_SYNTAX_TOKEN, tokens->value, minishell);

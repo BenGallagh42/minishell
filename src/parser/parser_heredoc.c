@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:01:32 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 19:45:25 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/26 20:41:51 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ static void	process_heredoc_line(char **content, char *line,
 	if (expand)
 		free(to_append);
 }
-
 
 int	heredoc_input_loop(const char *delimiter,
 	t_program *minishell, int expand, char **content)

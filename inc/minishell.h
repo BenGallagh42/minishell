@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 19:40:10 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/26 20:20:51 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,10 @@ char			*handle_word_token(t_token *token, t_program *minishell);
 char			*handle_tilde_expansion(const char *value,
 					t_program *minishell);
 void			append_expanded(t_list **args, t_list *to_add);
+int				is_special_dollar_case(const char **str, char **result);
+char			*get_variable_name(const char **str);
+void			expand_and_append_value(char *var_name, char **result,
+					t_program *minishell);
 
 // Utility Functions
 // Support list conversions, string ops, and token checks
