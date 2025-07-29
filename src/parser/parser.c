@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 18:44:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 18:44:07 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 20:45:18 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static void	handle_background(t_token **tokens, t_command *cmd)
 static int	check_remaining_tokens(t_token *tokens, t_command **cmd,
 	t_program *minishell)
 {
-	if (tokens)
+	if (tokens && tokens->type != TKN_END)
 	{
 		print_error_message(ERR_SYNTAX_TOKEN, tokens->value, minishell);
 		free_command(*cmd);
@@ -93,14 +93,30 @@ static int	check_remaining_tokens(t_token *tokens, t_command **cmd,
 t_command	*main_parser(t_token *tokens, t_program *minishell)
 {
 	t_command	*cmd;
+	t_command	*head;
+	t_command	*current;
 
 	if (preliminary_checks(tokens, minishell))
 		return (NULL);
-	cmd = parse_pipeline(&tokens, minishell);
-	if (!cmd)
-		return (NULL);
-	handle_background(&tokens, cmd);
-	if (check_remaining_tokens(tokens, &cmd, minishell))
-		return (NULL);
-	return (cmd);
+	head = NULL;
+	current = NULL;
+	while (tokens)
+	{
+		cmd = parse_pipeline(&tokens, minishell);
+		if (!cmd)
+			return (free_command(head), NULL);
+		if (!head)
+			head = cmd;
+		else
+			current->next = cmd;
+		current = cmd;
+		while (current->next)
+			current = current->next;
+		handle_background(&tokens, current);
+		if (tokens && tokens->type == TKN_END)
+			tokens = tokens->next;
+		if (check_remaining_tokens(tokens, &cmd, minishell))
+			return (free_command(head), NULL);
+	}
+	return (head);
 }

@@ -35,6 +35,7 @@ PARSER_SRC = $(PARSER_DIR)/parser.c \
              $(PARSER_DIR)/parser_redir.c \
              $(PARSER_DIR)/parser_redir_helpers.c \
              $(PARSER_DIR)/parser_heredoc.c \
+			 $(PARSER_DIR)/parser_heredoc_helpers.c \
              $(PARSER_DIR)/parser_expand.c \
 			 $(PARSER_DIR)/parser_expand_helpers.c \
              $(PARSER_DIR)/parser_utils.c \

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils3.c                                      :+:      :+:    :+:   */
+/*   exec_command.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 23:28:05 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/29 16:43:56 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 21:20:33 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,28 @@
 static void	exec_command_fallback(char *cmd_path,
 	t_command *cmd, t_program *mini)
 {
+	if (access(cmd_path, X_OK) != 0)
+	{
+		mini->error_code = ERR_PERMISSION_DENIED;
+		print_error_message(mini->error_code, cmd->args[0], mini);
+		free(cmd_path);
+		free_command(cmd);
+		exit(126);
+	}
 	execve(cmd_path, cmd->args, mini->envp);
-	mini->error_code = ERR_NO_COMMAND;
+	mini->error_code = ERR_PERMISSION_DENIED;
 	print_error_message(mini->error_code, cmd->args[0], mini);
 	free(cmd_path);
 	free_command(cmd);
-	exit(127);
+	exit(126);
 }
 
 // Handles case when command is not found
 static void	handle_cmd_not_found(t_command *cmd, t_program *mini)
 {
+	mini->error_code = ERR_NO_COMMAND;
 	print_error_message(mini->error_code, cmd->args[0], mini);
 	free_command(cmd);
-	if (mini->error_code == ERR_PERMISSION_DENIED)
-		exit(126);
 	exit(127);
 }
 
@@ -53,7 +60,19 @@ void	validate_and_exec_command(t_command *cmd, t_program *mini)
 
 	if (!cmd->args || !cmd->args[0] || !ft_strlen(cmd->args[0]))
 		handle_missing_args_and_exit(cmd, mini);
-	cmd_path = find_command_path(cmd->args[0], mini);
+	if (cmd->args[0][0] == '/' || ft_strncmp(cmd->args[0], "./", 2) == 0)
+	{
+		if (access(cmd->args[0], F_OK) == 0 && access(cmd->args[0], X_OK) != 0)
+		{
+			mini->error_code = ERR_PERMISSION_DENIED;
+			print_error_message(mini->error_code, cmd->args[0], mini);
+			free_command(cmd);
+			exit(126);
+		}
+		cmd_path = ft_strdup(cmd->args[0]);
+	}
+	else
+		cmd_path = find_command_path(cmd->args[0], mini);
 	if (!cmd_path)
 		handle_cmd_not_found(cmd, mini);
 	exec_command_fallback(cmd_path, cmd, mini);

@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 18:29:39 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 18:29:42 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 22:01:15 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,52 @@
 
 volatile sig_atomic_t	g_sigint_flag = 0;
 
+// Checks heredoc input for interrupts, EOF, or delimiter
+static int	handle_heredoc_input(const char *delimiter, char *line,
+							t_program *minishell)
+{
+	if (g_sigint_flag)
+	{
+		print_error_message(ERR_INTERRUPTED, NULL, minishell);
+		return (1);
+	}
+	if (!line)
+	{
+		ft_putstr_fd("minishell: warning: here-document "
+			"delimited by end-of-file (wanted `", STDERR_FILENO);
+		ft_putstr_fd((char *)delimiter, STDERR_FILENO);
+		ft_putendl_fd("')", STDERR_FILENO);
+		return (0);
+	}
+	if (ft_strcmp(line, delimiter) == 0)
+		return (0);
+	return (-1);
+}
+
+// Reads heredoc input until the delimiter
+int	heredoc_input_loop(const char *delimiter, t_program *minishell,
+						int expand, char **content)
+{
+	char	*line;
+	int		result;
+
+	while (1)
+	{
+		line = readline("> ");
+		result = handle_heredoc_input(delimiter, line, minishell);
+		if (result >= 0)
+		{
+			free(line);
+			return (result);
+		}
+		process_heredoc_line(content, line, expand, minishell);
+		free(line);
+	}
+	return (0);
+}
+
 // Handles Ctrl+C during heredoc input
-void	heredoc_signal_handler(int sig)
+static void	heredoc_signal_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
@@ -24,62 +68,9 @@ void	heredoc_signal_handler(int sig)
 	}
 }
 
-// Handles one line of heredoc input
-static void	process_heredoc_line(char **content, char *line,
-	int expand, t_program *minishell)
-{
-	char	*to_append;
-
-	if (expand)
-	{
-		to_append = expand_heredoc_line(line, minishell);
-		if (!to_append)
-		{
-			minishell->error_code = ERR_MEMORY;
-			return ;
-		}
-	}
-	else
-		to_append = line;
-	if (append_line_to_content(content, to_append, expand, minishell))
-		return ;
-	if (expand)
-		free(to_append);
-}
-
-// Reads heredoc input until the delimiter
-int	heredoc_input_loop(const char *delimiter,
-	t_program *minishell, int expand, char **content)
-{
-	char	*line;
-
-	while (1)
-	{
-		if (g_sigint_flag)
-		{
-			print_error_message(ERR_INTERRUPTED, NULL, minishell);
-			return (1);
-		}
-		line = readline("> ");
-		if (!line)
-		{
-			print_error_message(ERR_INTERRUPTED, NULL, minishell);
-			return (1);
-		}
-		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);
-			return (0);
-		}
-		process_heredoc_line(content, line, expand, minishell);
-		free(line);
-	}
-	return (0);
-}
-
 // Sets up and collects heredoc input
 char	*setup_and_run_heredoc(const char *delimiter,
-	t_program *minishell, int expand)
+							t_program *minishell, int expand)
 {
 	char	*content;
 	void	(*old_handler)(int);
@@ -91,7 +82,12 @@ char	*setup_and_run_heredoc(const char *delimiter,
 	if (heredoc_input_loop(delimiter, minishell, expand, &content))
 	{
 		free(content);
-		content = NULL;
+		return (NULL);
+	}
+	if (minishell->error_code == ERR_MEMORY)
+	{
+		free(content);
+		return (NULL);
 	}
 	signal(SIGINT, old_handler);
 	return (content);
