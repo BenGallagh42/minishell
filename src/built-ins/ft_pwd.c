@@ -6,13 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 18:32:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/16 20:52:23 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:42:30 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Prints current working directory
+// // Executes the pwd built-in command
 int	ft_pwd(void)
 {
 	char	*cwd;

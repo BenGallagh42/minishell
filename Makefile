@@ -31,7 +31,7 @@ PARSER_SRC = $(PARSER_DIR)/parser.c \
              $(PARSER_DIR)/parser_command.c \
 			 $(PARSER_DIR)/parser_command_helpers.c \
 			 $(PARSER_DIR)/parser_command_helpers2.c \
-			 $(PARSER_DIR)/parser_command_helpers3.c \
+			 $(PARSER_DIR)/parser_expansion.c \
              $(PARSER_DIR)/parser_redir.c \
              $(PARSER_DIR)/parser_redir_helpers.c \
              $(PARSER_DIR)/parser_heredoc.c \
@@ -46,13 +46,13 @@ PARSER_SRC = $(PARSER_DIR)/parser.c \
 			 $(PARSER_DIR)/parser_errors_handling.c \
              $(PARSER_DIR)/parser_cleanup.c
 
-EXEC_SRC =	$(EXEC_DIR)/exec_main.c \
+EXEC_SRC =	$(EXEC_DIR)/executor.c \
 			$(EXEC_DIR)/exec_builtin.c \
 			$(EXEC_DIR)/exec_utils.c \
-			$(EXEC_DIR)/exec_utils2.c \
-			$(EXEC_DIR)/exec_utils3.c \
-			$(EXEC_DIR)/exec_utils4.c \
-			$(EXEC_DIR)/exec_utils5.c 
+			$(EXEC_DIR)/exec_command.c \
+			$(EXEC_DIR)/exec_path_finder.c \
+			$(EXEC_DIR)/exec_process_utils.c \
+			$(EXEC_DIR)/exec_redirection.c 
 
 BUILTINS_SRC =	$(BUILTINS_DIR)/ft_echo.c \
 				$(BUILTINS_DIR)/ft_pwd.c \

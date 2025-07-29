@@ -4,15 +4,15 @@
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
-/*                                               ，全   +#+           */
-/*   Created: 2025/05/14 17:31:38 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/22 17:45:00 by bboulmie         ###   ########.fr       */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/29 18:44:05 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:44:07 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Parses a pipeline of commands separated by pipes */
+// Builds a chain of commands separated by pipes
 t_command	*parse_pipeline(t_token **tokens, t_program *minishell)
 {
 	t_command	*head;
@@ -37,7 +37,7 @@ t_command	*parse_pipeline(t_token **tokens, t_program *minishell)
 	return (head);
 }
 
-/* Performs initial checks on tokens and syntax */
+// Checks tokens and syntax for errors
 static int	preliminary_checks(t_token *tokens, t_program *minishell)
 {
 	t_token	*current;
@@ -65,7 +65,7 @@ static int	preliminary_checks(t_token *tokens, t_program *minishell)
 	return (0);
 }
 
-/* Handles background execution for the command */
+// Sets a command to run in the background
 static void	handle_background(t_token **tokens, t_command *cmd)
 {
 	if (*tokens && (*tokens)->type == TKN_BG)
@@ -75,7 +75,7 @@ static void	handle_background(t_token **tokens, t_command *cmd)
 	}
 }
 
-/* Checks for remaining tokens after parsing */
+// Checks for extra tokens after parsing
 static int	check_remaining_tokens(t_token *tokens, t_command **cmd,
 	t_program *minishell)
 {
@@ -89,7 +89,7 @@ static int	check_remaining_tokens(t_token *tokens, t_command **cmd,
 	return (0);
 }
 
-/* Main parser function */
+// Main function to parse commands
 t_command	*main_parser(t_token *tokens, t_program *minishell)
 {
 	t_command	*cmd;

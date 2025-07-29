@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 17:46:37 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/17 21:58:03 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:41:32 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	update_pwd(char *old_pwd, t_program *minishell)
 	return (0);
 }
 
-// Changes directory and updates envp
+// // Executes the cd built-in command
 int	ft_cd(t_command *cmd, t_program *minishell)
 {
 	char	*target;

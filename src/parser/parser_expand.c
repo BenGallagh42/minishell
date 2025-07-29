@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_expand.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/04 17:02:13 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 19:27:06 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:35:25 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:35:27 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Appends a literal substring to result
+// Adds a plain text piece to the result
 int	append_literal(char **result, const char *str, size_t len)
 {
 	char	*tmp;
@@ -30,7 +30,7 @@ int	append_literal(char **result, const char *str, size_t len)
 	return (1);
 }
 
-// Processes single-quoted strings
+// Handles single-quoted text without changes
 static int	process_single_quotes(const char **str, char **result)
 {
 	const char	*start;
@@ -47,7 +47,7 @@ static int	process_single_quotes(const char **str, char **result)
 	return (1);
 }
 
-// Processes double-quoted strings with expansion
+// Handles double-quoted text with variable replacement
 static int	process_double_quotes(const char **str, char **result,
 	t_program *minishell)
 {
@@ -74,7 +74,7 @@ static int	process_double_quotes(const char **str, char **result,
 	return (1);
 }
 
-// Processes the next token in the input string
+// Processes the next piece of input text
 static int	process_next_token(const char **ptr, char **result,
 	t_program *minishell)
 {
@@ -96,7 +96,7 @@ static int	process_next_token(const char **ptr, char **result,
 	return (1);
 }
 
-// Expands variables and removes quotes
+// Replaces variables and removes quotes from text
 char	*expand_and_remove_quotes(const char *str, t_program *minishell)
 {
 	char		*result;

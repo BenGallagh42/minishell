@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 17:05:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/27 04:24:35 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 19:07:34 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 19:07:36 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+// Checks if a string is all numbers
 int	is_numeric(const char *str)
 {
 	int	i;
@@ -30,6 +31,7 @@ int	is_numeric(const char *str)
 	return (1);
 }
 
+// Prints the list of tokens
 void	print_tokens(t_token *tokens)
 {
 	t_token	*current;
@@ -51,6 +53,7 @@ void	print_tokens(t_token *tokens)
 	}
 }
 
+// Prints redirection details
 void	print_redirections(t_redirection *redirs)
 {
 	t_redirection	*current;
@@ -74,6 +77,7 @@ void	print_redirections(t_redirection *redirs)
 	}
 }
 
+// Prints one command’s details
 static void	print_single_command(t_command *cmd, int cmd_num)
 {
 	int	i;
@@ -100,6 +104,7 @@ static void	print_single_command(t_command *cmd, int cmd_num)
 	printf("    Is Builtin: %d\n", cmd->is_builtin);
 }
 
+// Prints the list of commands
 void	print_commands(t_command *cmd_list)
 {
 	t_command	*current;

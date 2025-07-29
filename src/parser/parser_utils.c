@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 17:56:06 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/23 16:50:24 by bboulmie         ###   ########.fr       */
+/*   Created: 2025/07/29 18:53:00 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:53:03 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Checks if a command is a built-in shell command */
+// Checks if a command is built into the shell
 int	is_builtin(const char *cmd)
 {
 	const char	*builtins[] = {"echo", "cd", "pwd", "export", "unset",
@@ -29,7 +29,7 @@ int	is_builtin(const char *cmd)
 	return (0);
 }
 
-/* Converts a linked list of strings to a null-terminated array */
+// Turns a string list into an array
 char	**list_to_array(t_list *list)
 {
 	size_t	size;
@@ -55,7 +55,7 @@ char	**list_to_array(t_list *list)
 	return (array);
 }
 
-/* Converts a list of redirections to a linked list of structures */
+// Turns a redirection list into a linked structure
 t_redirection	*list_to_redir_array(t_list *list)
 {
 	t_redirection	*head;
@@ -85,7 +85,7 @@ t_redirection	*list_to_redir_array(t_list *list)
 	return (head);
 }
 
-/* Checks if a token type is a redirection operator */
+// Checks if a token is a redirection
 int	is_redirection_token(t_token_type type)
 {
 	if (type == TKN_REDIR_IN || type == TKN_REDIR_OUT
@@ -94,7 +94,7 @@ int	is_redirection_token(t_token_type type)
 	return (0);
 }
 
-/* Removes quotes from a string if present */
+// Removes quotes from a string
 char	*remove_quotes(const char *str)
 {
 	size_t	len;

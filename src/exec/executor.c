@@ -1,61 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_main.c                                        :+:      :+:    :+:   */
+/*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 14:08:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/27 02:06:00 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/29 19:30:49 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
-static void	close_pipe_ends(int *prev_pipe, int *pipefd, int is_piped)
+// Executes a single built-in command with redirections
+int	handle_single_builtin(t_command *cmd, t_program *mini)
 {
-	if (*prev_pipe != -1)
-		close(*prev_pipe);
-	if (is_piped)
+	int	stdout_backup;
+
+	stdout_backup = dup(STDOUT_FILENO);
+	if (stdout_backup == -1)
 	{
-		close(pipefd[1]);
-		*prev_pipe = pipefd[0];
+		mini->error_code = ERR_MEMORY;
+		print_error_message(ERR_MEMORY, NULL, mini);
+		return (0);
 	}
-	else
-		*prev_pipe = -1;
-}
-
-int	apply_redirections(t_redirection *redirs, t_program *mini)
-{
-	int				fd;
-	static int		heredoc_count;
-	t_heredoc_ctx	ctx;
-
-	ctx.fd = &fd;
-	ctx.heredoc_count = &heredoc_count;
-	return (process_redirection_list(redirs, mini, &ctx));
-}
-
-void	exec_child(t_command *cmd, t_program *mini,
-	int prev_pipe, int *pipefd)
-{
-	setup_child_signals();
-	if (prev_pipe != -1)
-	{
-		dup2(prev_pipe, STDIN_FILENO);
-		close(prev_pipe);
-	}
-	setup_pipes(prev_pipe, pipefd, cmd->is_piped);
 	if (!apply_redirections(cmd->redirs, mini))
 	{
-		free_command(cmd);
-		exit(1);
+		dup2(stdout_backup, STDOUT_FILENO);
+		close(stdout_backup);
+		return (0);
 	}
-	if (!cmd->args || !cmd->args[0] || !ft_strlen(cmd->args[0]))
-		handle_missing_args_and_exit(cmd, mini);
-	validate_and_exec_command(cmd, mini);
+	execute_builtin(cmd, mini);
+	dup2(stdout_backup, STDOUT_FILENO);
+	close(stdout_backup);
+	return (1);
 }
 
+// Main loop for executing commands
 void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 {
 	int	i;
@@ -83,7 +64,8 @@ void	exec_loop(t_command *cmd, t_program *mini, pid_t *pids, int count)
 		close(prev_pipe);
 }
 
-void	execute_commands(t_command *cmd, t_program *mini)
+// Main function to execute command list
+void	main_executor(t_command *cmd, t_program *mini)
 {
 	int		count;
 	pid_t	*pids;

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redir_helpers.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/11 19:30:37 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 19:45:41 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:30:20 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:30:23 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Handles heredoc by reading input until delimiter */
+// Handles heredoc redirection and delimiter
 int	handle_heredoc(t_redirection *redir, const char *delim,
 	t_program *minishell)
 {
@@ -40,6 +40,7 @@ int	handle_heredoc(t_redirection *redir, const char *delim,
 	return (1);
 }
 
+// Expands a heredoc line and removes quotes
 char	*expand_heredoc_line(char *line, t_program *minishell)
 {
 	char	*to_append;
@@ -50,6 +51,7 @@ char	*expand_heredoc_line(char *line, t_program *minishell)
 	return (to_append);
 }
 
+// Adds a line to heredoc content with a newline
 int	append_line_to_content(char **content, char *line,
 	int should_free, t_program *minishell)
 {

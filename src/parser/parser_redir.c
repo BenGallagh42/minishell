@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/04 20:44:34 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 19:07:40 by bboulmie         ###   ########.fr       */
+/*   Created: 2025/07/29 18:49:40 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:49:42 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Allocates memory for a new redirection structure */
+// Creates a new redirection structure
 static t_redirection	*allocate_redir(void)
 {
 	t_redirection	*redir;
@@ -23,7 +23,7 @@ static t_redirection	*allocate_redir(void)
 	return (redir);
 }
 
-/* Sets the redirection type and advances the token pointer */
+// Sets the redirection type and moves to the next token
 static void	process_redir_type(t_token **tokens, t_redirection *redir)
 {
 	t_token	*current;
@@ -33,7 +33,7 @@ static void	process_redir_type(t_token **tokens, t_redirection *redir)
 	*tokens = current->next;
 }
 
-/* Checks for syntax errors in redirection (e.g., missing target) */
+// Checks for redirection syntax errors
 static int	check_redir_syntax(t_token **tokens, t_program *minishell,
 				t_redirection *redir)
 {
@@ -57,7 +57,7 @@ static int	check_redir_syntax(t_token **tokens, t_program *minishell,
 	return (1);
 }
 
-/* Expands and validates the redirection target, handles heredoc if needed */
+// Expands and checks the redirection target
 static int	expand_and_validate_target(t_token **tokens, t_redirection *redir,
 				t_program *minishell)
 {
@@ -80,8 +80,7 @@ static int	expand_and_validate_target(t_token **tokens, t_redirection *redir,
 	return (1);
 }
 
-/* Parses a redirection token and its target,
-returning a redirection structure */
+// Builds a redirection structure from tokens
 t_redirection	*parse_redir(t_token **tokens, t_program *minishell)
 {
 	t_redirection	*redir;

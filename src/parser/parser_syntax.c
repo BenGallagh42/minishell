@@ -5,13 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/04 20:43:40 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/18 17:20:41 by bboulmie         ###   ########.fr       */
+/*   Created: 2025/07/29 18:50:42 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:50:44 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Checks the order of tokens for errors
 static int	validate_token_sequence(t_token *tokens, t_program *minishell)
 {
 	int		has_command;
@@ -37,6 +38,7 @@ static int	validate_token_sequence(t_token *tokens, t_program *minishell)
 	return (1);
 }
 
+// Checks if tokens follow correct syntax
 int	check_syntax(t_token *tokens, t_program *minishell)
 {
 	if (!tokens)

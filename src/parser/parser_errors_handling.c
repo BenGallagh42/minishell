@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_errors_handling.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/03 19:18:44 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 19:26:35 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:37:42 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:37:44 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Shows error for unexpected tokens
 void	print_syntax_error(const char *token_value, t_program *minishell)
 {
 	minishell->error_code = 2;
@@ -23,6 +24,7 @@ void	print_syntax_error(const char *token_value, t_program *minishell)
 	ft_putendl_fd("'", STDERR_FILENO);
 }
 
+// Shows error for pipe issues
 void	print_pipe_error(t_program *minishell)
 {
 	minishell->error_code = 2;
@@ -30,6 +32,7 @@ void	print_pipe_error(t_program *minishell)
 		STDERR_FILENO);
 }
 
+// Shows file errors (missing or no permission)
 void	print_file_error(int error_code, const char *token_value,
 		t_program *minishell)
 {
@@ -59,6 +62,7 @@ void	print_file_error(int error_code, const char *token_value,
 	}
 }
 
+// Shows general errors (command, memory, interrupt)
 void	print_general_error(int error_code, const char *token_value,
 		t_program *minishell)
 {
@@ -80,6 +84,7 @@ void	print_general_error(int error_code, const char *token_value,
 		ft_putendl_fd("minishell: unknown error", STDERR_FILENO);
 }
 
+// Picks the right error message to show
 void	print_error_message(int error_code, const char *token_value,
 	t_program *minishell)
 {

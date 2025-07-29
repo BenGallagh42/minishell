@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/04 17:01:32 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 20:41:51 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:29:39 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:29:42 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 volatile sig_atomic_t	g_sigint_flag = 0;
 
+// Handles Ctrl+C during heredoc input
 void	heredoc_signal_handler(int sig)
 {
 	if (sig == SIGINT)
@@ -23,6 +24,7 @@ void	heredoc_signal_handler(int sig)
 	}
 }
 
+// Handles one line of heredoc input
 static void	process_heredoc_line(char **content, char *line,
 	int expand, t_program *minishell)
 {
@@ -45,6 +47,7 @@ static void	process_heredoc_line(char **content, char *line,
 		free(to_append);
 }
 
+// Reads heredoc input until the delimiter
 int	heredoc_input_loop(const char *delimiter,
 	t_program *minishell, int expand, char **content)
 {
@@ -74,6 +77,7 @@ int	heredoc_input_loop(const char *delimiter,
 	return (0);
 }
 
+// Sets up and collects heredoc input
 char	*setup_and_run_heredoc(const char *delimiter,
 	t_program *minishell, int expand)
 {
@@ -93,6 +97,7 @@ char	*setup_and_run_heredoc(const char *delimiter,
 	return (content);
 }
 
+// Starts heredoc processing for a delimiter
 char	*read_heredoc(const char *delimiter, t_program *minishell, int expand)
 {
 	return (setup_and_run_heredoc(delimiter, minishell, expand));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_redirector.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:38:25 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/27 03:04:46 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:07:00 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ void	token_redirector(const char **input, t_token **head, t_token **current)
 	add_token(head, current, type, ft_strndup(start, *input - start));
 }
 
-// Main function for handling redirection tokens
+// Handles redirection tokens and checks for syntax errors
 void	token_redirector_main(const char **input, t_token **hd, t_token **curr)
 {
 	const char	*start;

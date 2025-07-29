@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 09:35:03 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/27 04:00:29 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/29 16:30:06 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+// Initializes variables for ft_atoll conversion
 static void	init_atoll(const char *str, int *i, int *sign)
 {
 	*i = 0;
@@ -24,6 +25,7 @@ static void	init_atoll(const char *str, int *i, int *sign)
 	}
 }
 
+// Converts string to long long integer
 long long	ft_atoll(const char *str)
 {
 	long long	result;
@@ -48,6 +50,7 @@ long long	ft_atoll(const char *str)
 	return (sign * result);
 }
 
+// Handles exit command error cases
 int	handle_exit_errors(t_command *cmd, t_program *minishell)
 {
 	if (!cmd->args[1])
@@ -73,6 +76,7 @@ int	handle_exit_errors(t_command *cmd, t_program *minishell)
 	return (-1);
 }
 
+// Prints exit error and returns error code
 int	print_exit_and_return_code(t_program *minishell, const char *arg)
 {
 	ft_putstr_fd("minishell: exit: ", STDERR_FILENO);

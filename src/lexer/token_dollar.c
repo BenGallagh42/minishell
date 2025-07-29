@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token_dollar.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/11 16:35:22 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/27 03:33:20 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:31:17 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:31:19 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+// Handles dollar sign followed by double quotes
 static void	handle_dollar_quotes(const char **input,
 	t_token **head, t_token **curr)
 {
@@ -29,6 +30,7 @@ static void	handle_dollar_quotes(const char **input,
 	add_token(head, curr, TKN_WORD, token);
 }
 
+// Handles dollar sign followed by question mark for exit status
 static void	handle_dollar_question(const char **input, t_token **head,
 	t_token **curr, t_program *minishell)
 {
@@ -44,6 +46,7 @@ static void	handle_dollar_question(const char **input, t_token **head,
 	add_token(head, curr, TKN_WORD, exit_status);
 }
 
+// Tokenizes dollar sign for environment variables or special cases
 void	token_dollar(const char **input, t_token **head,
 	t_token **curr, t_program *minishell)
 {

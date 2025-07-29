@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_expand_helpers.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/26 20:19:31 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/26 20:19:53 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:36:47 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:36:48 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Handles special dollar sign cases
 int	is_special_dollar_case(const char **str, char **result)
 {
 	char	*tmp;
@@ -28,6 +29,7 @@ int	is_special_dollar_case(const char **str, char **result)
 	return (0);
 }
 
+// Gets the variable name from input
 char	*get_variable_name(const char **str)
 {
 	const char	*start;
@@ -48,6 +50,7 @@ char	*get_variable_name(const char **str)
 	return (var_name);
 }
 
+// Replaces a variable with its value
 void	expand_and_append_value(char *var_name, char **result,
 	t_program *minishell)
 {

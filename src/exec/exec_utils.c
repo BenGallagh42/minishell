@@ -3,88 +3,87 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/09 19:50:39 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 20:53:10 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/27 02:04:44 by hnithyan          #+#    #+#             */
+/*   Updated: 2025/07/29 19:31:13 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
-static char	*search_path_dirs(char *cmd, char **paths)
+// Sets up signal handlers for child process
+void	setup_child_signals(void)
 {
-	char	*full_path;
-	int		i;
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
 
-	i = 0;
-	while (paths[i])
+// Configures pipes for command execution
+void	setup_pipes(int prev_pipe, int *pipefd, int is_piped)
+{
+	if (prev_pipe != -1)
 	{
-		full_path = ft_strjoin_free(ft_strjoin(paths[i], "/"), cmd);
-		if (access(full_path, X_OK) == 0)
-		{
-			ft_free_array(paths);
-			return (full_path);
-		}
-		free(full_path);
-		i++;
+		dup2(prev_pipe, STDIN_FILENO);
+		close(prev_pipe);
 	}
-	ft_free_array(paths);
-	return (NULL);
-}
-
-static char	*is_valid_absolute_path(char *cmd, t_program *minishell)
-{
-	struct stat	sb;
-
-	if (stat(cmd, &sb) == 0)
+	if (is_piped)
 	{
-		if (S_ISDIR(sb.st_mode))
-		{
-			minishell->error_code = ERR_PERMISSION_DENIED;
-			return (NULL);
-		}
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		close(pipefd[1]);
 	}
-	minishell->error_code = ERR_FILE_NOT_FOUND;
-	return (NULL);
 }
 
-static char	*handle_null_path_env(t_program *minishell)
+// Applies redirections to the current command
+int	apply_redirections(t_redirection *redirs, t_program *mini)
 {
-	minishell->error_code = ERR_NO_COMMAND;
-	return (NULL);
+	int				fd;
+	static int		heredoc_count;
+	t_heredoc_ctx	ctx;
+
+	ctx.fd = &fd;
+	ctx.heredoc_count = &heredoc_count;
+	return (process_redirection_list(redirs, mini, &ctx));
 }
 
-static char	*handle_split_and_search(char *cmd, char *path_env,
-	t_program *minishell)
+// Sets up pipe and forks for command execution
+int	setup_pipe_and_fork(t_command *cmd, t_program *mini,
+	int *pipefd, pid_t *pid)
 {
-	char	**paths;
-	char	*found_path;
-
-	paths = ft_split(path_env, ':');
-	if (!paths)
+	if (cmd->is_piped && pipe(pipefd) == -1)
 	{
-		minishell->error_code = ERR_MEMORY;
-		return (NULL);
+		mini->error_code = ERR_PIPE;
+		print_error_message(ERR_PIPE, NULL, mini);
+		return (0);
 	}
-	found_path = search_path_dirs(cmd, paths);
-	if (!found_path)
-		minishell->error_code = ERR_NO_COMMAND;
-	return (found_path);
+	*pid = fork();
+	if (*pid == -1)
+	{
+		mini->error_code = ERR_FORK;
+		print_error_message(ERR_FORK, NULL, mini);
+		return (0);
+	}
+	return (1);
 }
 
-char	*find_command_path(char *cmd, t_program *minishell)
+// Executes child process with redirections and pipes
+void	exec_child(t_command *cmd, t_program *mini,
+	int prev_pipe, int *pipefd)
 {
-	char	*path_env;
-
-	if (!cmd || !*cmd)
-		return (NULL);
-	if (ft_strchr(cmd, '/'))
-		return (is_valid_absolute_path(cmd, minishell));
-	path_env = ft_getenv("PATH", minishell->envp);
-	if (!path_env)
-		return (handle_null_path_env(minishell));
-	return (handle_split_and_search(cmd, path_env, minishell));
+	setup_child_signals();
+	if (prev_pipe != -1)
+	{
+		dup2(prev_pipe, STDIN_FILENO);
+		close(prev_pipe);
+	}
+	setup_pipes(prev_pipe, pipefd, cmd->is_piped);
+	if (!apply_redirections(cmd->redirs, mini))
+	{
+		free_command(cmd);
+		exit(1);
+	}
+	if (!cmd->args || !cmd->args[0] || !ft_strlen(cmd->args[0]))
+		handle_missing_args_and_exit(cmd, mini);
+	validate_and_exec_command(cmd, mini);
 }

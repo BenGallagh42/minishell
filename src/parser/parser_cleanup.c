@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 18:02:26 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/23 16:50:44 by bboulmie         ###   ########.fr       */
+/*   Created: 2025/07/29 18:36:13 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:36:15 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/* Frees a command structure */
+// Frees a command and its linked commands
 void	free_command(t_command *cmd)
 {
 	t_command	*next;
@@ -29,7 +29,7 @@ void	free_command(t_command *cmd)
 	}
 }
 
-/* Frees an entire linked list of redirections */
+// Frees a list of redirections
 void	free_redirs(t_redirection *redirs)
 {
 	t_redirection	*next;
@@ -44,7 +44,7 @@ void	free_redirs(t_redirection *redirs)
 	}
 }
 
-/* Frees a single redirection node */
+// Frees one redirection node
 void	free_redirection(void *content)
 {
 	t_redirection	*redir;
@@ -58,7 +58,7 @@ void	free_redirection(void *content)
 	}
 }
 
-/* Frees a command and its lists */
+// Frees a command and its argument/redirection lists
 void	free_cmd(t_command *cmd, t_list *args, t_list *redirs)
 {
 	if (cmd)
@@ -75,7 +75,7 @@ void	free_cmd(t_command *cmd, t_list *args, t_list *redirs)
 		ft_lstclear(&redirs, free_redirection);
 }
 
-/* Frees temporary lists */
+// Frees temporary argument and redirection lists
 void	free_lists(t_list **args, t_list **redirs)
 {
 	if (args && *args)

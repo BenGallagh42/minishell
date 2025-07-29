@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils4.c                                      :+:      :+:    :+:   */
+/*   exec_utils3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/26 23:39:45 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/26 23:50:00 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/26 23:28:05 by hnithyan          #+#    #+#             */
+/*   Updated: 2025/07/29 16:43:56 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
+// Executes command with error handling
 static void	exec_command_fallback(char *cmd_path,
 	t_command *cmd, t_program *mini)
 {
@@ -23,6 +24,7 @@ static void	exec_command_fallback(char *cmd_path,
 	exit(127);
 }
 
+// Handles case when command is not found
 static void	handle_cmd_not_found(t_command *cmd, t_program *mini)
 {
 	print_error_message(mini->error_code, cmd->args[0], mini);
@@ -32,6 +34,19 @@ static void	handle_cmd_not_found(t_command *cmd, t_program *mini)
 	exit(127);
 }
 
+// Handles missing command arguments and exits
+void	handle_missing_args_and_exit(t_command *cmd, t_program *mini)
+{
+	mini->error_code = ERR_NO_COMMAND;
+	if (cmd->args)
+		print_error_message(mini->error_code, cmd->args[0], mini);
+	else
+		print_error_message(mini->error_code, "", mini);
+	free_command(cmd);
+	exit(127);
+}
+
+// Validates and executes a command
 void	validate_and_exec_command(t_command *cmd, t_program *mini)
 {
 	char	*cmd_path;
@@ -42,15 +57,4 @@ void	validate_and_exec_command(t_command *cmd, t_program *mini)
 	if (!cmd_path)
 		handle_cmd_not_found(cmd, mini);
 	exec_command_fallback(cmd_path, cmd, mini);
-}
-
-void	handle_missing_args_and_exit(t_command *cmd, t_program *mini)
-{
-	mini->error_code = ERR_NO_COMMAND;
-	if (cmd->args)
-		print_error_message(mini->error_code, cmd->args[0], mini);
-	else
-		print_error_message(mini->error_code, "", mini);
-	free_command(cmd);
-	exit(127);
 }

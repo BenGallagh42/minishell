@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   token_dollar_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/27 03:32:05 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/27 03:32:18 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:07:19 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Safely duplicates environment variable value or returns empty string
 static char	*safe_strdup_env(char *var_value)
 {
 	if (var_value)
@@ -19,6 +20,7 @@ static char	*safe_strdup_env(char *var_value)
 	return (ft_strdup(""));
 }
 
+// Handles environment variable value tokenization
 void	handle_env_var_value(t_token **head, t_token **curr,
 	char *var_name, t_program *minishell)
 {
@@ -29,6 +31,7 @@ void	handle_env_var_value(t_token **head, t_token **curr,
 	free(var_name);
 }
 
+// Handles invalid environment variable names
 void	handle_invalid_var(const char **input,
 	t_token **head, t_token **curr)
 {

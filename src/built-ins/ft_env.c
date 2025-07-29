@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 16:27:48 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/27 03:58:48 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:41:48 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	print_env_error(t_program *minishell, const char *arg)
 	minishell->error_code = 127;
 }
 
-// Prints environment variables
+// // Executes the env built-in command
 int	ft_env(t_command *cmd, t_program *minishell)
 {
 	char	**env;

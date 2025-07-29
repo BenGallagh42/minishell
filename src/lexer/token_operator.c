@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 20:49:34 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/23 18:04:12 by bboulmie         ###   ########.fr       */
+/*   Created: 2025/07/29 18:31:08 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:31:10 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ void	check_consecutive_operators(const char *input, t_token *current_token)
 	}
 }
 
+// Determines the type of operator token
 t_token_type	get_operator_type(const char **input)
 {
 	if (**input == '|' && *(*input + 1) == '|')
@@ -54,7 +55,7 @@ t_token_type	get_operator_type(const char **input)
 	}
 }
 
-// Tokenizes operators and ensures no consecutive operator errors
+// Tokenizes operators and checks for consecutive operator errors
 void	token_operator(const char **input, t_token **head,
 	t_token **current)
 {

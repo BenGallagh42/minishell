@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 14:26:42 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:15:05 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,9 @@ void			handle_env_var_value(t_token **head, t_token **curr,
 					char *var_name, t_program *minishell);
 void			handle_invalid_var(const char **input, t_token **head,
 					t_token **curr);
-
+void			print_quote_error(char quote, t_program *minishell);
+void			concatenate_quoted_string(const char **input, char **result,
+					t_program *minishell);
 
 // PARSER FUNCTIONS
 // Syntax Checking
@@ -235,9 +237,15 @@ void			ft_free_array(char **array);
 void			free_cmd(t_command *cmd, t_list *args, t_list *redirs);
 void			free_lists(t_list **args, t_list **redirs);
 
-//EXECUTION FUNCTIONS
-void			execute_commands(t_command *cmd, t_program *minishell);
-void			execute_builtin(t_command *cmd, t_program *minishell);
+// EXECUTION FUNCTIONS
+// Main Execution
+void			main_executor(t_command *cmd, t_program *mini);
+void			exec_loop(t_command *cmd, t_program *mini, pid_t *pids,
+					int count);
+void			exec_child(t_command *cmd, t_program *mini,
+					int prev_pipe, int *pipefd);
+
+// Redirection Handling
 void			generate_tmp_filename(char *buffer, int count);
 int				handle_output_redirection(t_redirection *redir,
 					t_program *mini, int *fd);
@@ -247,17 +255,28 @@ int				handle_heredoc_redirection(t_redirection *redir,
 					t_program *mini, t_heredoc_ctx *ctx);
 int				process_redirection_list(t_redirection *redirs,
 					t_program *mini, t_heredoc_ctx *ctx);
+int				apply_redirections(t_redirection *redirs, t_program *mini);
+
+// Process Management
 void			setup_child_signals(void);
-void			validate_and_exec_command(t_command *cmd, t_program *mini);
 void			setup_pipes(int prev_pipe, int *pipefd, int is_piped);
-void			handle_missing_args_and_exit(t_command *cmd, t_program *mini);
-int				handle_single_builtin(t_command *cmd, t_program *mini);
 int				setup_pipe_and_fork(t_command *cmd, t_program *mini,
 					int *pipefd, pid_t *pid);
-int				apply_redirections(t_redirection *redirs, t_program *mini);
 int				count_commands(t_command *cmd);
 pid_t			*init_pid_array(int count, t_program *mini);
 void			handle_child_signals(pid_t *pids, int count, t_program *mini);
+void			close_pipe_ends(int *prev_pipe, int *pipefd, int is_piped);
+
+// Built-in Execution
+void			execute_builtin(t_command *cmd, t_program *minishell);
+int				handle_single_builtin(t_command *cmd, t_program *mini);
+
+// Path Finding
+char			*find_command_path(char *cmd, t_program *minishell);
+
+// Command Execution
+void			validate_and_exec_command(t_command *cmd, t_program *mini);
+void			handle_missing_args_and_exit(t_command *cmd, t_program *mini);
 
 // BUILT_IN FUNCTIONS
 //ft_export
@@ -295,9 +314,6 @@ char			*create_new_var(const char *name, const char *value);
 char			**alloc_new_envp(int n);
 void			copy_and_add_to_envp(char **new_envp, char **old_envp,
 					char *new_var, int n);
-
-// Handle redirections
-
 
 // Utils
 char			*find_command_path(char *cmd, t_program *minishell);

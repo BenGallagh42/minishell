@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils3.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/10 17:44:26 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 20:36:58 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:53:59 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:54:03 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Frees a NULL-terminated array of strings
+// Frees an array of strings
 void	ft_free_array(char **array)
 {
 	size_t	i;
@@ -31,7 +31,7 @@ void	ft_free_array(char **array)
 	free(array);
 }
 
-// Iterates through tokens and chek their error code 
+// Checks tokens for errors
 int	has_token_errors(t_token *tokens)
 {
 	while (tokens)

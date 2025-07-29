@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/14 17:50:02 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/26 19:13:08 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:39:08 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:39:10 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Turns words and wildcards into arguments
 static int	process_words(t_token **current,
 	t_list **args, t_program *minishell)
 {
@@ -38,6 +39,7 @@ static int	process_words(t_token **current,
 	return (0);
 }
 
+// Turns redirections into a list
 static int	process_redirs(t_token **current,
 	t_list **redirs, t_program *minishell)
 {
@@ -64,6 +66,7 @@ static int	process_redirs(t_token **current,
 	return (0);
 }
 
+// Handles command tokens (words and redirections)
 static int	process_command_tokens(t_token **current, t_list **args,
 	t_list **redirs, t_program *minishell)
 {
@@ -89,6 +92,7 @@ static int	process_command_tokens(t_token **current, t_list **args,
 	return (0);
 }
 
+// Makes final command from lists
 static t_command	*finalize_command(t_command *cmd,
 	t_list *args, t_list *redirs)
 {
@@ -112,6 +116,7 @@ static t_command	*finalize_command(t_command *cmd,
 	return (cmd);
 }
 
+// Builds a command from tokens
 t_command	*parse_simple_cmd(t_token **tokens, t_program *minishell)
 {
 	t_command	*cmd;

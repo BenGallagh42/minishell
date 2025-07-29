@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 18:14:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/23 19:11:10 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:42:13 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static int	process_export_arg(const char *arg, t_program *minishell)
 	return (ret);
 }
 
-// Exports environment variables
+// // Executes the export built-in command
 int	ft_export(t_command *cmd, t_program *minishell)
 {
 	int		i;

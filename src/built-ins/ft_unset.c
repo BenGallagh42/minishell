@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 22:23:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 15:00:47 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:42:53 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	remove_var(char **envp, int index)
 	free(tmp);
 }
 
-// Unsets environment variables
+// // Executes the unset built-in command
 int	ft_unset(t_command *cmd, t_program *minishell)
 {
 	int		i;

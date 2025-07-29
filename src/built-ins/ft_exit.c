@@ -6,12 +6,13 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/16 20:48:04 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 20:05:20 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 16:29:07 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+// Executes the exit built-in command
 int	ft_exit(t_command *cmd, t_program *minishell)
 {
 	long long	ll_code;

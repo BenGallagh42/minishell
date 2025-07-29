@@ -1,17 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   shell_free.c                                       :+:      :+:    :+:   */
+/*   free_shell.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/29 14:19:15 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/29 14:20:31 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 19:00:56 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 19:00:58 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// Frees the shell’s environment variables
 void	free_shell(t_program *minishell)
 {
 	int	i;
@@ -22,6 +23,7 @@ void	free_shell(t_program *minishell)
 	free(minishell->envp);
 }
 
+// Frees a list of tokens
 void	free_tokens(t_token *tokens)
 {
 	t_token	*next;

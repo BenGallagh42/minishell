@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 21:33:33 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/26 22:43:11 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/29 16:42:56 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
+// Generates a temporary filename for heredoc
 void	generate_tmp_filename(char *buffer, int count)
 {
 	char	*base;
@@ -36,6 +37,7 @@ void	generate_tmp_filename(char *buffer, int count)
 	buffer[i] = '\0';
 }
 
+// Handles output redirection
 int	handle_output_redirection(t_redirection *redir, t_program *mini, int *fd)
 {
 	int	err_code;
@@ -57,6 +59,7 @@ int	handle_output_redirection(t_redirection *redir, t_program *mini, int *fd)
 	return (1);
 }
 
+// Handles input redirection
 int	handle_input_redirection(t_redirection *redir, t_program *mini, int *fd)
 {
 	int	err_code;
@@ -77,6 +80,7 @@ int	handle_input_redirection(t_redirection *redir, t_program *mini, int *fd)
 	return (1);
 }
 
+// Handles heredoc redirection
 int	handle_heredoc_redirection(t_redirection *redir, t_program *mini,
 	t_heredoc_ctx *ctx)
 {
@@ -98,6 +102,7 @@ int	handle_heredoc_redirection(t_redirection *redir, t_program *mini,
 	return (1);
 }
 
+// Processes a list of redirections
 int	process_redirection_list(t_redirection *redirs,
 	t_program *mini, t_heredoc_ctx *ctx)
 {

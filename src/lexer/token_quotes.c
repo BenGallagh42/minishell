@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/13 18:41:50 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/24 19:59:07 by bboulmie         ###   ########.fr       */
+/*   Created: 2025/07/29 18:30:59 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:31:01 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ const char	*scan_for_quote(const char **input, char quote)
 	return (NULL);
 }
 
+// Tokenizes quoted strings and handles unclosed quotes
 void	token_quotes(const char **input, t_token **head,
 			t_token **current, t_program *minishell)
 {

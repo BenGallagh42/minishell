@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 16:47:14 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/14 21:28:00 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:11:49 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	handle_value_part(const char **input, char quote)
 	}
 }
 
-// Tokenizes a word from the input
+// Tokenizes a word, handling equals signs and quoted values
 void	token_word(const char **input, t_token **head, t_token **current)
 {
 	const char	*start;

@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/18 16:49:15 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/03 20:15:59 by bboulmie         ###   ########.fr       */
+/*   Created: 2025/07/29 18:48:48 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:48:50 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Sorts the list of matched filenames in alphabetical order
+// Sorts filenames in alphabetical order
 static void	sort_matches(t_list *matches)
 {
 	t_list	*current;
@@ -40,7 +40,7 @@ static void	sort_matches(t_list *matches)
 	}
 }
 
-// Helper function to process the wildcard matching loop
+// Helps match a wildcard pattern to a filename
 static int	match_wildcard_loop(const char **p, const char **f,
 	const char **star, const char **f_star)
 {
@@ -68,7 +68,7 @@ static int	match_wildcard_loop(const char **p, const char **f,
 	return (1);
 }
 
-// Compares a wildcard pattern to a filename and returns 1 if they match
+// Checks if a wildcard pattern matches a filename
 static int	match_pattern(const char *pattern, const char *filename)
 {
 	const char	*p;
@@ -87,7 +87,7 @@ static int	match_pattern(const char *pattern, const char *filename)
 	return (*p == '\0');
 }
 
-// Gathers all filenames in the current directory matching the pattern
+// Finds filenames in the current directory that match a pattern
 static t_list	*collect_matches(const char *pattern, t_program *minishell)
 {
 	DIR				*dir;
@@ -114,7 +114,7 @@ static t_list	*collect_matches(const char *pattern, t_program *minishell)
 	return (matches);
 }
 
-// Expands a wildcard pattern into a sorted list of matching filenames
+// Turns a wildcard pattern into a sorted list of matching filenames
 t_list	*expand_wildcard(const char *pattern, t_program *minishell)
 {
 	t_list	*matches;

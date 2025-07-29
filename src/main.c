@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 18:25:58 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/21 14:57:29 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 19:01:23 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 19:01:25 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+// Starts the minishell program
 int	main(int argc, char **argv, char **envp)
 {
 	t_program	minishell;

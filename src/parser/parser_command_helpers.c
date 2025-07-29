@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_command_helpers.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/18 17:00:01 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/25 20:07:37 by hnithyan         ###   ########.fr       */
+/*   Created: 2025/07/29 18:30:31 by bboulmie          #+#    #+#             */
+/*   Updated: 2025/07/29 18:30:34 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Checks if the command requires file argument validation
+// Checks if a command needs file argument checks
 int	needs_file_validation(const char *cmd)
 {
 	const char	*file_cmds[] = {"head", "tail", NULL};
@@ -28,7 +28,7 @@ int	needs_file_validation(const char *cmd)
 	return (0);
 }
 
-// Validates file existence and readability for command arguments
+// Checks if a file exists and can be read
 int	validate_file_arg(const char *arg, t_program *minishell)
 {
 	if (access(arg, F_OK | R_OK) != 0)
@@ -39,7 +39,7 @@ int	validate_file_arg(const char *arg, t_program *minishell)
 	return (1);
 }
 
-// Expands a single token and returns a list containing the expanded result
+// Turns a token into a list of expanded values
 t_list	*get_expanded_list(t_token *token, t_program *minishell)
 {
 	char	*expanded;
@@ -65,7 +65,7 @@ t_list	*get_expanded_list(t_token *token, t_program *minishell)
 	return (NULL);
 }
 
-// Appends the contents of to_add to args and clears to_add
+// Adds an expanded list to the argument list
 void	append_expanded(t_list **args, t_list *to_add)
 {
 	if (!to_add)
@@ -76,7 +76,7 @@ void	append_expanded(t_list **args, t_list *to_add)
 		ft_lstlast(*args)->next = to_add;
 }
 
-// Set all bytes of the t_command structure to zero/NULL
+// Sets up a command structure with empty fields
 void	init_command(t_command *cmd)
 {
 	cmd->args = NULL;
