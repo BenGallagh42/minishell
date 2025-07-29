@@ -6,7 +6,7 @@
 /*   By: hnithyan <hnithyan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/27 03:32:56 by hnithyan         ###   ########.fr       */
+/*   Updated: 2025/07/29 14:26:42 by hnithyan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,8 @@ typedef struct s_program
 void			init_shell(t_program *minishell, char **envp);
 void			run_shell(t_program *minishell);
 void			free_shell(t_program *minishell);
+void			free_tokens(t_token *tokens);
+// Signal handling
 void			sigquit_handler(int sig);
 void			sigint_handler(int sig);
 
