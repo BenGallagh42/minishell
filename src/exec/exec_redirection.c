@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_utils2.c                                      :+:      :+:    :+:   */
+/*   exec_redirection.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 21:33:33 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/29 16:42:56 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:01:40 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	generate_tmp_filename(char *buffer, int count)
 {
 	char	*base;
 	char	*num;
+	char	*num_orig;
 	int		i;
 
 	base = "/tmp/minishell_heredoc_";
@@ -29,12 +30,14 @@ void	generate_tmp_filename(char *buffer, int count)
 	num = ft_itoa(count);
 	if (!num)
 		return ;
+	num_orig = num;
 	while (*num)
 	{
 		buffer[i] = *num++;
 		i++;
 	}
 	buffer[i] = '\0';
+	free(num_orig);
 }
 
 // Handles output redirection

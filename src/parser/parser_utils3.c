@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 18:53:59 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 18:54:03 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 16:48:23 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,14 @@ int	has_token_errors(t_token *tokens)
 		tokens = tokens->next;
 	}
 	return (0);
+}
+
+// Sets a command to run in the background
+void	handle_background(t_token **tokens, t_command *cmd)
+{
+	if (*tokens && (*tokens)->type == TKN_BG)
+	{
+		cmd->is_background = 1;
+		*tokens = (*tokens)->next;
+	}
 }

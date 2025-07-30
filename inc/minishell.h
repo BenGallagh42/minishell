@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 18:16:10 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 21:15:19 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 16:52:02 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,13 @@ enum e_error_code
 	ERR_PIPE
 };
 
+// Structure to hold command list pointers (for parser.c)
+typedef struct s_cmd_list
+{
+	t_command	*head;
+	t_command	*current;
+}	t_cmd_list;
+
 //EXECUTION: Redirection and program structs
 typedef struct s_heredoc_ctx
 {
@@ -178,6 +185,7 @@ int				handle_file_validation(t_token *token,
 					t_list **args, t_program *minishell);
 int				handle_expansion_and_append(t_token *token,
 					t_list **args, t_program *minishell);
+void			handle_background(t_token **tokens, t_command *cmd);
 
 // Redirection Handling
 // Manage redirections, heredocs, and validation

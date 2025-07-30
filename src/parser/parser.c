@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 18:44:05 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 20:45:18 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 16:53:31 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,6 @@ static int	preliminary_checks(t_token *tokens, t_program *minishell)
 	return (0);
 }
 
-// Sets a command to run in the background
-static void	handle_background(t_token **tokens, t_command *cmd)
-{
-	if (*tokens && (*tokens)->type == TKN_BG)
-	{
-		cmd->is_background = 1;
-		*tokens = (*tokens)->next;
-	}
-}
-
 // Checks for extra tokens after parsing
 static int	check_remaining_tokens(t_token *tokens, t_command **cmd,
 	t_program *minishell)
@@ -89,34 +79,40 @@ static int	check_remaining_tokens(t_token *tokens, t_command **cmd,
 	return (0);
 }
 
+// Links parsed command to list and handles background processing
+static void	link_command(t_cmd_list *cmd_list, t_command *cmd,
+	t_token **tokens)
+{
+	if (!cmd_list->head)
+		cmd_list->head = cmd;
+	else
+		cmd_list->current->next = cmd;
+	cmd_list->current = cmd;
+	while (cmd_list->current->next)
+		cmd_list->current = cmd_list->current->next;
+	handle_background(tokens, cmd_list->current);
+}
+
 // Main function to parse commands
 t_command	*main_parser(t_token *tokens, t_program *minishell)
 {
 	t_command	*cmd;
-	t_command	*head;
-	t_command	*current;
+	t_cmd_list	cmd_list;
 
 	if (preliminary_checks(tokens, minishell))
 		return (NULL);
-	head = NULL;
-	current = NULL;
+	cmd_list.head = NULL;
+	cmd_list.current = NULL;
 	while (tokens)
 	{
 		cmd = parse_pipeline(&tokens, minishell);
 		if (!cmd)
-			return (free_command(head), NULL);
-		if (!head)
-			head = cmd;
-		else
-			current->next = cmd;
-		current = cmd;
-		while (current->next)
-			current = current->next;
-		handle_background(&tokens, current);
+			return (free_command(cmd_list.head), NULL);
+		link_command(&cmd_list, cmd, &tokens);
 		if (tokens && tokens->type == TKN_END)
 			tokens = tokens->next;
 		if (check_remaining_tokens(tokens, &cmd, minishell))
-			return (free_command(head), NULL);
+			return (free_command(cmd_list.head), NULL);
 	}
-	return (head);
+	return (cmd_list.head);
 }
