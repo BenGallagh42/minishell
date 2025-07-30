@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal_shell.c                                     :+:      :+:    :+:   */
+/*   shell_signals.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 18:44:16 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 19:31:19 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:57:00 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,5 @@ void	sigint_handler(int sig)
 void	sigquit_handler(int sig)
 {
 	(void)sig;
-	write(STDOUT_FILENO, "Quit\n", 5);
+	write(STDOUT_FILENO, "Quit (core dumped)\n", 20);
 }

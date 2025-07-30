@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 23:39:45 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/30 15:45:28 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:56:52 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static void	process_child_status(int status, t_program *mini)
 	{
 		if (WTERMSIG(status) == SIGQUIT)
 		{
-			write(STDOUT_FILENO, "Quit\n", 5);
+			write(STDOUT_FILENO, "Quit (core dumped)\n", 20);
 			mini->error_code = 128 + WTERMSIG(status);
 		}
 		else if (WTERMSIG(status) == SIGINT)
