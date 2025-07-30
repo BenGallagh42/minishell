@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/29 18:29:39 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 22:01:15 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:48:51 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ static void	heredoc_signal_handler(int sig)
 	if (sig == SIGINT)
 	{
 		g_sigint_flag = 1;
-		printf("\n");
+		ft_printf("\n");
 	}
 }
 

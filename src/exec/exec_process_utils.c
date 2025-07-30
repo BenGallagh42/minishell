@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/26 23:39:45 by hnithyan          #+#    #+#             */
-/*   Updated: 2025/07/29 19:31:04 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:45:28 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,26 @@ pid_t	*init_pid_array(int count, t_program *mini)
 	return (pids);
 }
 
+// Handles signal and exit status for a single process
+static void	process_child_status(int status, t_program *mini)
+{
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+		{
+			write(STDOUT_FILENO, "Quit\n", 5);
+			mini->error_code = 128 + WTERMSIG(status);
+		}
+		else if (WTERMSIG(status) == SIGINT)
+		{
+			write(STDOUT_FILENO, "\n", 1);
+			mini->error_code = 128 + WTERMSIG(status);
+		}
+	}
+	else if (WIFEXITED(status))
+		mini->error_code = WEXITSTATUS(status);
+}
+
 // Handles signals and exit statuses for child processes
 void	handle_child_signals(pid_t *pids, int count, t_program *mini)
 {
@@ -67,10 +87,7 @@ void	handle_child_signals(pid_t *pids, int count, t_program *mini)
 		if (pids[j] > 0)
 		{
 			waitpid(pids[j], &status, 0);
-			if (WIFSIGNALED(status) && WTERMSIG(status) == SIGQUIT)
-				write(STDOUT_FILENO, "Quit\n", 5);
-			if (WIFEXITED(status))
-				mini->error_code = WEXITSTATUS(status);
+			process_child_status(status, mini);
 		}
 	}
 }

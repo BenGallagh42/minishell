@@ -6,7 +6,7 @@
 /*   By: bboulmie <bboulmie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:38:25 by bboulmie          #+#    #+#             */
-/*   Updated: 2025/07/29 18:07:00 by bboulmie         ###   ########.fr       */
+/*   Updated: 2025/07/30 15:48:51 by bboulmie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	token_redirector_main(const char **input, t_token **hd, t_token **curr)
 			next++;
 		if (*next == '<' || *next == '>' || *next == '|' || *next == '&')
 		{
-			printf("minishell: syntax error");
+			ft_printf("minishell: syntax error");
 			(*curr)->error = 1;
 		}
 	}

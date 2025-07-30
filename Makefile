@@ -69,11 +69,11 @@ BUILTINS_SRC =	$(BUILTINS_DIR)/ft_echo.c \
 				$(BUILTINS_DIR)/ft_exit2.c 
 				
 MAIN_SRC =	$(MAIN_DIR)/main.c \
-			$(MAIN_DIR)/utils.c \
-			$(MAIN_DIR)/free_shell.c \
-			$(MAIN_DIR)/init_shell.c \
-			$(MAIN_DIR)/run_shell.c \
-			$(MAIN_DIR)/signal_shell.c
+			$(MAIN_DIR)/trash.c \
+			$(MAIN_DIR)/shell_free.c \
+			$(MAIN_DIR)/shell_innit.c \
+			$(MAIN_DIR)/shell_run.c \
+			$(MAIN_DIR)/shell_signals.c
 
 # Object Files
 SRC = $(LEXER_SRC) $(PARSER_SRC) $(EXEC_SRC) $(BUILTINS_SRC) $(MAIN_SRC)
